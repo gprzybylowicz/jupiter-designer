@@ -56,15 +56,12 @@ window.addEventListener("load", function() {
 		pixiRenderer.x = 150;
 		pixiRenderer.y = 50;
 
-		var animate = function() {
-			requestAnimationFrame(animate);
+
+		PIXI.ticker.shared.add(function(){
 			stats.begin();
 			renderer.render(stage);
 			stats.end();
-		}.bind(this);
-
-		requestAnimationFrame(animate);
-
+		}, this);
 	}
 });
 
