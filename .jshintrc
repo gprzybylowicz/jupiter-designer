@@ -1,0 +1,32 @@
+{
+	"globals": {
+		"PIXI": true,
+		"slots": false,
+		"core": false,
+		"TweenMax": false,
+		"Back": false,
+		"Sine": false,
+		"Quad": false,
+		"Linear": false,
+		"Stats": false,
+		"describe": false,
+		"it": false,
+		"assert": false,
+		"sinon": false,
+		"beforeEach": false,
+		"before": false,
+		"afterEach": false,
+		"after": false,
+		"game": false,
+		"define": false
+	},
+	"browser": true,
+	"supernew": true,
+	"quotmark": "double",
+	"camelcase": true,
+	"eqeqeq": true,
+	"newcap": false,
+	"maxdepth": 4,
+	"maxstatements": 30,
+	"validthis": true
+}
