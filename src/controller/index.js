@@ -1,7 +1,9 @@
-var ProjectMenuController = require("./ProjectMenuController.js");
+var ProjectMenuController = require("./menu/ProjectMenuController.js");
+var TextureMenuController = require("./menu/TextureMenuController.js");
 
 module.exports = {
 	projectMenuController: new ProjectMenuController(),
+	textureMenuController: new TextureMenuController(),
 
 	//todo: deprecated - to remove
 	ColorController: require("./ColorController.js"),
