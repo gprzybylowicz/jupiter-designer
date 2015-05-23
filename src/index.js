@@ -6,6 +6,8 @@ var SizeController = require("./controller").SizeController;
 var ColorController = require("./controller").ColorController;
 var test = require("./fileTest.js");
 
+var Menu = require("./view/menu").Menu;
+
 window.addEventListener("load", function() {
 
 	var stage = new PIXI.Container();
@@ -42,27 +44,28 @@ window.addEventListener("load", function() {
 
 
 		var gui = new dat.GUI();
-		gui.add(fileInput, "loadFile").name("Load file");
-		var color = new dat.GUI();
-
-		var emitterController = new EmitterController(gui);
-		var emitter = emitterController.emitter;
-
-		var controllers = [
-			new LifeController(gui),
-			new PositionController(gui),
-			new SizeController(gui),
-			new ColorController(color)
-		];
-
-		for (var i = 0; i < controllers.length; ++i) {
-			emitter.behaviours.add(controllers[i].behaviour);
-		}
-
-		var pixiRenderer = new PIXIRenderer(emitter, config);
-		stage.addChild(pixiRenderer);
-		pixiRenderer.x = 150;
-		pixiRenderer.y = 50;
+		var menu = new Menu(gui);
+		//gui.add(fileInput, "loadFile").name("Load file");
+		//var color = new dat.GUI();
+		//
+		//var emitterController = new EmitterController(gui);
+		//var emitter = emitterController.emitter;
+		//
+		//var controllers = [
+		//	new LifeController(gui),
+		//	new PositionController(gui),
+		//	new SizeController(gui),
+		//	new ColorController(color)
+		//];
+		//
+		//for (var i = 0; i < controllers.length; ++i) {
+		//	emitter.behaviours.add(controllers[i].behaviour);
+		//}
+		//
+		//var pixiRenderer = new PIXIRenderer(emitter, config);
+		//stage.addChild(pixiRenderer);
+		//pixiRenderer.x = 150;
+		//pixiRenderer.y = 50;
 
 		PIXI.ticker.shared.add(function() {
 			stats.begin();
