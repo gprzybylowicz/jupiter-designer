@@ -4,6 +4,7 @@ var LifeController = require("./controller").LifeController;
 var PositionController = require("./controller").PositionController;
 var SizeController = require("./controller").SizeController;
 var ColorController = require("./controller").ColorController;
+var test = require("./fileTest.js");
 
 window.addEventListener("load", function() {
 
@@ -14,7 +15,6 @@ window.addEventListener("load", function() {
 	PIXI.loader.add("assets/spritesheet.json");
 	PIXI.loader.once("complete", onLoaded);
 	PIXI.loader.load();
-
 
 	function onLoaded() {
 		var stats = new Stats();
@@ -34,7 +34,15 @@ window.addEventListener("load", function() {
 		image.y = 150;
 		image.scale.set(2, 2);
 
+		var fileInput = {
+			loadFile: function() {
+				test(stage);
+			}
+		};
+
+
 		var gui = new dat.GUI();
+		gui.add(fileInput, "loadFile").name("Load file");
 		var color = new dat.GUI();
 
 		var emitterController = new EmitterController(gui);
@@ -56,8 +64,7 @@ window.addEventListener("load", function() {
 		pixiRenderer.x = 150;
 		pixiRenderer.y = 50;
 
-
-		PIXI.ticker.shared.add(function(){
+		PIXI.ticker.shared.add(function() {
 			stats.begin();
 			renderer.render(stage);
 			stats.end();

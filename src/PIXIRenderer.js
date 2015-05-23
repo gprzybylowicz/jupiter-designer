@@ -27,8 +27,6 @@ PIXIRenderer.prototype.stop = function() {
 
 PIXIRenderer.prototype.update = function(dt) {
 	this.emitter.update(dt / 100);
-	console.log(this.unusedSprites.length, this.children.length);
-
 };
 
 
