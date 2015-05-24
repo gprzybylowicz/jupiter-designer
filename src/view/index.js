@@ -1,3 +1,4 @@
 module.exports = {
-	menu: require("./menu")
+	menu: require("./menu"),
+	MainView: require("./MainView.js")
 };
