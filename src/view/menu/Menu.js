@@ -1,13 +1,19 @@
 var ProjectMenu = require("./ProjectMenu.js");
 var TextureMenu = require("./TextureMenu.js");
 var BackgroundMenu = require("./BackgroundMenu.js");
+var ColorMenu = require("./ColorMenu.js");
+var LifeMenu = require("./LifeMenu.js");
+var PositionMenu = require("./PositionMenu.js");
 
 function Menu(gui){
 	this.gui = gui;
 
-	this.projectMenu = new ProjectMenu(this.addClosedFolder("Project"));
-	this.texturetMenu = new TextureMenu(this.addClosedFolder("Texture"));
-	this.backgroundMenu = new BackgroundMenu(this.addClosedFolder("Background"));
+	new ProjectMenu(this.addClosedFolder("Project"));
+	new TextureMenu(this.addClosedFolder("Texture"));
+	new BackgroundMenu(this.addClosedFolder("Background"));
+	new LifeMenu(this.addClosedFolder("Life Behaviour"));
+	new ColorMenu(this.addClosedFolder("Color Behaviour"));
+	new PositionMenu(this.addClosedFolder("Position Behaviour"));
 }
 
 Menu.prototype.addClosedFolder = function(name) {

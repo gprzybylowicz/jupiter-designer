@@ -1,9 +1,9 @@
 var PIXIRenderer = require("./PIXIRenderer.js");
-var EmitterController = require("./controller").EmitterController;
-var LifeController = require("./controller").LifeController;
-var PositionController = require("./controller").PositionController;
-var SizeController = require("./controller").SizeController;
-var ColorController = require("./controller").ColorController;
+//var EmitterController = require("./controller").EmitterController;
+//var LifeController = require("./controller").LifeController;
+//var PositionController = require("./controller").PositionController;
+//var SizeController = require("./controller").SizeController;
+//var ColorController = require("./controller").ColorController;
 var test = require("./fileTest.js");
 
 var Menu = require("./view/menu").Menu;

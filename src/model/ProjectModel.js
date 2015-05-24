@@ -1,6 +1,5 @@
-function ProjectModel(){
-	this.config = {};
-	this.particle = null;
+function ProjectModel() {
+	this.emitter = new jupiter.Emitter();
 }
 
 module.exports = ProjectModel;
