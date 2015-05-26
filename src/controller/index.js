@@ -1,6 +1,6 @@
-var ProjectMenuController = require("./menu/ProjectMenuController.js");
-var TextureMenuController = require("./menu/TextureMenuController.js");
-var BackgroundMenuController = require("./menu/BackgroundMenuController.js");
+var ProjectMenuController = require("./ProjectMenuController.js");
+var TextureMenuController = require("./TextureMenuController.js");
+var BackgroundMenuController = require("./BackgroundMenuController.js");
 var BehaviourController = require("./BehaviourController.js");
 
 module.exports = {

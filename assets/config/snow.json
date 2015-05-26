@@ -1,0 +1,59 @@
+{
+  "behaviours": [
+    {
+      "priority": 10000,
+      "maxLifeTime": 2.4,
+      "timeVariance": 0.8823022574530415,
+      "type": "LifeBehaviour"
+    },
+    {
+      "priority": 100,
+      "position": {
+        "x": 338.02690582959633,
+        "y": 0
+      },
+      "positionVariance": {
+        "x": 142.8699551569507,
+        "y": 0
+      },
+      "velocity": {
+        "x": 0,
+        "y": 119.91031390134538
+      },
+      "velocityVariance": {
+        "x": 142.8699551569507,
+        "y": 0
+      },
+      "acceleration": {
+        "x": 0,
+        "y": 28.0717488789237
+      },
+      "accelerationVariance": {
+        "x": 96.95067264573981,
+        "y": 0
+      },
+      "type": "PositionBehaviour"
+    },
+    {
+      "priority": 0,
+      "allowNegativeValues": false,
+      "sizeStart": {
+        "x": 1,
+        "y": 1
+      },
+      "sizeEnd": {
+        "x": 0,
+        "y": 0
+      },
+      "startVariance": 0,
+      "endVariance": 0,
+      "type": "SizeBehaviour"
+    }
+  ],
+  "emitController": {
+    "_maxParticles": 0,
+    "_maxLife": 1,
+    "_emitPerSecond": 66.17266930897812,
+    "_frames": 0
+  }
+}
