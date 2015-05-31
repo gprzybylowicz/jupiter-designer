@@ -1,13 +1,20 @@
-//1. Export particle texture
-//2. Load particle texture
-//3. Load peddefined
+var SubMenu = require("./SubMenu.js");
+var inherit = require("../../util").inherit;
 
 var controller = require("../../controller").textureMenuController;
 
-function ProjectMenu(gui) {
-	gui.add(controller, "exportParticleTexture").name("Export particle texture");
-	gui.add(controller, "loadParticleTexture").name("Load particle texture");
-	gui.add(controller, "loadPredefined").name("Load predefined form list");
+function TextureMenu() {
+	SubMenu.call(this);
+
+	this.ui = {
+		rows: [
+			this.button("Export texture"),
+			this.button("Upload texture"),
+			this.button("Load predefined")
+		]
+	};
 }
 
-module.exports = ProjectMenu;
+inherit(TextureMenu, SubMenu);
+
+module.exports = TextureMenu;

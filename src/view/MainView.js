@@ -5,10 +5,11 @@ function MainView() {
 	this.renderer = this.createRenderer();
 	this.stage = this.createStage();
 	this.stats = this.createStats();
-	this.menu = this.createMenu();
 	this.particleView = this.createParticleView();
+		this.menu = this.createMenu();
 
 	this.draw();
+
 }
 
 MainView.prototype.createStage = function() {
@@ -18,8 +19,8 @@ MainView.prototype.createStage = function() {
 MainView.prototype.createRenderer = function() {
 	//todo: autodetect renderer
 	//todo: dynamic size of renderer
-	var renderer = new PIXI.WebGLRenderer(window.innerWidth / 2, window.innerHeight - 100);
-	document.body.appendChild(renderer.view);
+	var renderer = new PIXI.WebGLRenderer(400, 400);
+	document.getElementById("stage").appendChild(renderer.view);
 	return renderer;
 };
 
@@ -33,8 +34,7 @@ MainView.prototype.createStats = function() {
 };
 
 MainView.prototype.createMenu = function() {
-	var gui = new dat.GUI();
-	return new Menu(gui);
+	return new Menu();
 };
 
 MainView.prototype.createParticleView = function() {
