@@ -1,9 +1,8 @@
-
 var controller = require("../../controller").projectMenuController;
 
 function ProjectMenu() {
 	this.ui = {
-		rows:[
+		rows: [
 			{view: "button", value: "Save Project", width: 200},
 			{view: "button", value: "Load Project", width: 200},
 			{view: "button", value: "Export config", width: 200},

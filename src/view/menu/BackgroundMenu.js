@@ -1,17 +1,19 @@
-//1. Load
-//2. Remove
-//3. Set Ccale (x,y)
-//4. Set Color
-//4. Enable drag and move(default:true)
+var SubMenu = require("./SubMenu.js");
+var inherit = require("../../util").inherit;
 
-var controller = require("../../controller").backgroundMenuController;
+function BackgroundMenu() {
+	SubMenu.call(this);
 
-function BackgroundMenu(gui) {
-	gui.add(controller, "load").name("Load image");
-	gui.add(controller, "remove").name("Remove image");
-	gui.add(controller, "setScale").name("Set scale");
-	gui.add(controller, "setColor").name("Set color");
-	//gui.add(controller, "enableDragEndMove").name("Enable darge and move");
+	this.ui = {
+		rows: [
+			this.button("Load image"),
+			this.button("Remove background"),
+			this.counter("Scale:", {step: 0.2, value: 1, min: 0, max: 10, align: "center"}),
+			this.button("Color")
+		]
+	};
 }
+
+inherit(BackgroundMenu, SubMenu);
 
 module.exports = BackgroundMenu;

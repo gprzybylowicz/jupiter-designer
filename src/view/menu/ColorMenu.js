@@ -1,38 +1,29 @@
-var BaseBehaviourMenu = require("./BaseBehaviourMenu.js");
-var model = require("../../model").behaviourModel;
+var SubMenu = require("./SubMenu.js");
+var inherit = require("../../util").inherit;
 
-function ColorMenu(gui) {
-	BaseBehaviourMenu.call(this, gui, model.colorBehaviour);
+function ColorMenu() {
+	SubMenu.call(this);
 
-	this.addStartColorFolder(gui, model.colorBehaviour);
-	this.addEndColorFolder(gui, model.colorBehaviour);
+	this.ui = {
+		rows: [
+			this.checkbox("Enabled:", {value: 0}),
+			{view: "colorpicker", label: "Start", name: "color", value: "#ffffff"},
+			{view: "colorpicker", label: "End", name: "color", value: "#ffffff"},
+			this.section("Start variance:"),
+			this.slider("", {label: "R:", labelWidth: 30, min: 0, max: 255, step: 1, value: 0}),
+			this.slider("", {label: "G:", labelWidth: 30, min: 0, max: 255, step: 1, value: 0}),
+			this.slider("", {label: "B:", labelWidth: 30, min: 0, max: 255, step: 1, value: 0}),
+			this.slider("", {label: "A:", labelWidth: 30, min: 0, max: 255, step: 1, value: 0}),
+			this.section("End variance:"),
+			this.slider("", {label: "R:", labelWidth: 30, min: 0, max: 255, step: 1, value: 0}),
+			this.slider("", {label: "G:", labelWidth: 30, min: 0, max: 255, step: 1, value: 0}),
+			this.slider("", {label: "B:", labelWidth: 30, min: 0, max: 255, step: 1, value: 0}),
+			this.slider("", {label: "A:", labelWidth: 30, min: 0, max: 255, step: 1, value: 0}),
+		]
+	};
 }
 
-ColorMenu.prototype = Object.create(BaseBehaviourMenu.prototype);
-ColorMenu.prototype.constructor = ColorMenu;
-
-ColorMenu.prototype.addStartColorFolder = function(gui, behaviour) {
-	var folder = gui.addFolder("Start color");
-	folder.addColor(behaviour.start, "hex");
-	folder.add(behaviour.start, "alpha", 0, 1);
-	folder.add(behaviour.startVariance, "r", 0, 255).name("variance r");
-	folder.add(behaviour.startVariance, "g", 0, 255).name("variance g");
-	folder.add(behaviour.startVariance, "b", 0, 255).name("variance b");
-	folder.add(behaviour.startVariance, "alpha", 0, 1).name("variance alpha");
-	folder.open();
-};
-
-ColorMenu.prototype.addEndColorFolder = function(gui, behaviour) {
-	var folder = gui.addFolder("End color");
-	folder.addColor(behaviour.end, "hex");
-	folder.add(behaviour.end, "alpha", 0, 1);
-	folder.add(behaviour.endVariance, "r", 0, 255).name("variance r");
-	folder.add(behaviour.endVariance, "g", 0, 255).name("variance g");
-	folder.add(behaviour.endVariance, "b", 0, 255).name("variance b");
-	folder.add(behaviour.endVariance, "alpha", 0, 1).name("variance alpha");
-	folder.open();
-};
-
+inherit(ColorMenu, SubMenu);
 
 module.exports = ColorMenu;
 

@@ -7,103 +7,53 @@ var PositionMenu = require("./PositionMenu.js");
 var SizeMenu = require("./SizeMenu.js");
 var EmitterMenu = require("./EmitterMenu.js");
 
-function Menu(gui) {
+function Menu() {
 	//this.gui = gui;
 
+	this.currentViewId = null;
 	var menu = {
 		view: "menu", id: "m1",
 		layout: "y", width: 200,
+		height: window.innerHeight,
 		select: true,
 		data: [
-			{id: "1", value: "Translations", viewId: "t"},
-			{id: "2", value: "Posts", viewId: "x"},
+			{value: "Project", menuView: new ProjectMenu()},
+			{value: "Texture", menuView: new TextureMenu()},
+			{value: "Background", menuView: new BackgroundMenu()},
 			{$template: "Separator"},
-			{id: "3", value: "Info", template: {view: "checkbox", id: "field_a", label: "Second age", value: 1},}
+			{value: "Emitter", menuView: new EmitterMenu()},
+			{value: "Life", menuView: new LifeMenu()},
+			{value: "Color", menuView: new ColorMenu()},
+			{value: "Position", menuView: new PositionMenu()}
+			//{value: "Size", menuView: new SizeMenu()}
 
 		],
 		on: {
-			onMenuItemClick: function(id) {
-				//$$("t1").setHTML("Click: " + this.getMenuItem(id).value);
-				console.log(this.getMenuItem(id));
-
-				if (this.visibleItem) {
-					this.visibleItem.hide();
-				}
-
-				this.visibleItem = $$(this.getMenuItem(id).viewId);
-				this.visibleItem.show();
-				//$$("t").show();
-
-				//t.show();
-			}
+			onMenuItemClick: this.onMenuItemClick.bind(this)
 		}
 	};
 
-	var tVisible = false;
-
-	var t = {
-		id: "t",
-		hidden: true,
-		rows: [
-			{view: "button", id: "LoadBut", value: "Load", width: 200, align: "left"},
-			{view: "button", value: "Save", width: 200, align: "center"},
-			{view: "label", label: "Variance", height: 30, width: 200, align: "center"},
-			{
-				view: "slider",
-				label: "R:",
-				labelWidth: 50,
-				min: 0,
-				max: 255,
-				value: 0,
-				width: 200,
-				align: "center"
-			},
-			{view: "checkbox", id: "field_a", label: "Second age", value: 1, width: 200, labelWidth: 100},
-			{view: "button", value: "Info", width: 200, align: "right"}]
-	};
-
-	var x = {hidden: true, view: "button", id: "x", value: "Load 2", width: 200, align: "left"};
-
-	//$$("m1").select(1);
-
-	//console.log($$("menu"));
-	//ui.getNode("menu").addView({template:"sss"});
-
-
-
-	//console.log(a);
-	//this.node = a.getNode("stage");
-	//console.log(this.node);
-
-	var general = [
-		new ProjectMenu(),
-		new TextureMenu()
-		//new BackgroundMenu(this.addClosedFolder("Background"));
-		//new EmitterMenu(this.addClosedFolder("Emitter"));
-		//new LifeMenu(this.addClosedFolder("Life Behaviour"));
-		//new ColorMenu(this.addClosedFolder("Color Behaviour"));
-		//new PositionMenu(this.addClosedFolder("Position Behaviour"));
-		//new SizeMenu(this.addClosedFolder("Size Behaviour"));
-	];
-
-	var menuColumns = [menu];
-	for (var i = 0; i < general.length; i++) {
-		menuColumns.push(general[i].ui);
-	}
-
-	menuColumns.push({body: {content: "stage"}});
-
-	console.log(menuColumns);
-	webix.ui({
+	this.ui = webix.ui({
 		type: "space",
-		cols: menuColumns
+		cols: [
+			menu,
+			{body: {content: "stage"}}
+		]
 	});
+
+	webix.event(window, "resize", function() {
+		$$("m1").define("height", window.innerHeight);
+	}.bind(this));
 }
 
-Menu.prototype.addClosedFolder = function(name) {
-	var folder = this.gui.addFolder(name);
-	folder.close();
-	return folder;
-};
+Menu.prototype.onMenuItemClick = function(id) {
+	if (this.currentViewId) {
+		this.ui.removeView(this.currentViewId);
+	}
 
+	var item = $$("m1").getMenuItem(id);
+	this.currentViewId = this.ui.addView(item.menuView.ui, 1);
+	this.ui.adjust();
+
+};
 module.exports = Menu;

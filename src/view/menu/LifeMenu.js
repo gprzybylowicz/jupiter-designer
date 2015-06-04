@@ -1,10 +1,18 @@
-var model = require("../../model").behaviourModel;
+var SubMenu = require("./SubMenu.js");
+var inherit = require("../../util").inherit;
 
-function LifeMenu(gui) {
-	var behaviour = model.lifeBehaviour;
+function LifeMenu() {
+	SubMenu.call(this);
 
-	gui.add(behaviour, "maxLifeTime", 0, 10);
-	gui.add(behaviour, "timeVariance", 0, 10).name("variance");
+	this.ui = {
+		autoheight: false,
+		rows: [
+			this.slider("Life time:", {min: 0, max: 10, step: 0.1, value: 2}),
+			this.slider("Life variance:", {min: 0, max: 10, step: 0.1, value: 0})
+		]
+	};
 }
+
+inherit(LifeMenu, SubMenu);
 
 module.exports = LifeMenu;
