@@ -6,8 +6,11 @@ function EmitterMenu() {
 
 	this.ui = {
 		rows: [
-			this.counter("Emit per sec:", {step: 0.1, value: 1, min: 0, max: 10, align: "center"})
+			this.counter("Emit per sec:", {
+				step: 0.1, value: 1, min: 0, max: 10, align: "center",format:webix.i18n.numberFormat
+			})
 		]
+
 	};
 }
 

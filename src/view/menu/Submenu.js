@@ -1,8 +1,23 @@
 var extension = require("../extension");
+var service = require("../../service");
 
 function SubMenu() {
 	this.WIDTH = 200;
+	service.msg.once("menu/created", this.onMenuCreated, this);
 }
+
+SubMenu.prototype.onMenuCreated = function() {
+};
+
+SubMenu.prototype.bind = function(id, target, propertyName) {
+	$$(id).onChanged = function(newValue) {
+		target[propertyName] = newValue;
+	};
+
+	service.msg.on("emitter/changed", function() {
+		$$(id).setValue(target[propertyName]);
+	});
+};
 
 SubMenu.prototype.button = function(label, style) {
 	return this._setup({view: "button", value: label}, style);
@@ -27,9 +42,8 @@ SubMenu.prototype.checkbox = function(label, style) {
 };
 
 SubMenu.prototype.slider = function(title, style) {
-	var startValueTitle = style.value || 0;
 	style = extension.slider(title, style);
-	return this._setup({view: "slider", title: title + startValueTitle}, style);
+	return this._setup({view: "slider"}, style);
 
 };
 
