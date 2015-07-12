@@ -6,7 +6,7 @@ function MainView() {
 	this.stage = this.createStage();
 	this.stats = this.createStats();
 	this.particleView = this.createParticleView();
-		this.menu = this.createMenu();
+	this.menu = this.createMenu();
 
 	this.draw();
 

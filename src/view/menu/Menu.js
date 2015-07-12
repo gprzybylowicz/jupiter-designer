@@ -6,6 +6,7 @@ var LifeMenu = require("./LifeMenu.js");
 var PositionMenu = require("./PositionMenu.js");
 var SizeMenu = require("./SizeMenu.js");
 var EmitterMenu = require("./EmitterMenu.js");
+var service = require("../../service");
 
 function Menu() {
 	//this.gui = gui;
@@ -22,7 +23,7 @@ function Menu() {
 			{value: "Background", menuView: new BackgroundMenu()},
 			{$template: "Separator"},
 			{value: "Emitter", menuView: new EmitterMenu()},
-			{value: "Life", menuView: new LifeMenu()},
+			{value: "Life", id: "temp", menuView: new LifeMenu()},
 			{value: "Color", menuView: new ColorMenu()},
 			{value: "Position", menuView: new PositionMenu()}
 			//{value: "Size", menuView: new SizeMenu()}
@@ -44,6 +45,9 @@ function Menu() {
 	webix.event(window, "resize", function() {
 		$$("m1").define("height", window.innerHeight);
 	}.bind(this));
+
+	this.onMenuItemClick("temp");
+	service.msg.emit("menu/created");
 }
 
 Menu.prototype.onMenuItemClick = function(id) {
