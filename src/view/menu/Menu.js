@@ -19,8 +19,7 @@ function Menu() {
 		{value: "Life", view: new LifeMenu()},
 		{value: "Color", view: new ColorMenu()},
 		{value: "Position", view: new PositionMenu()},
-		//{value: "Size", menuView: new SizeMenu()}
-
+		{value: "Size", view: new SizeMenu()}
 	];
 
 	var menu = {
