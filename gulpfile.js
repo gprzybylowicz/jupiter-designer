@@ -78,11 +78,12 @@ gulp.task("test-watch", function() {
 	});
 });
 
-
 gulp.task('connect', function() {
 
 	watch(["./src/**/*.js"], function() {
 		gulp.start("browserify:designer");
 	});
-	connect.server();
+	connect.server({
+		port: 8888
+	});
 });

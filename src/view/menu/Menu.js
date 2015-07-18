@@ -9,54 +9,58 @@ var EmitterMenu = require("./EmitterMenu.js");
 var service = require("../../service");
 
 function Menu() {
-	//this.gui = gui;
 
-	this.currentViewId = null;
+	var subMenus = [
+		{value: "Project", view: new ProjectMenu()},
+		{value: "Texture", view: new TextureMenu()},
+		{value: "Background", view: new BackgroundMenu()},
+		{$template: "Separator"},
+		{value: "Emitter", view: new EmitterMenu()},
+		{value: "Life", view: new LifeMenu()},
+		{value: "Color", view: new ColorMenu()},
+		{value: "Position", view: new PositionMenu()},
+		//{value: "Size", menuView: new SizeMenu()}
+
+	];
+
 	var menu = {
 		view: "menu", id: "m1",
 		layout: "y", width: 200,
 		height: window.innerHeight,
 		select: true,
-		data: [
-			{value: "Project", menuView: new ProjectMenu()},
-			{value: "Texture", menuView: new TextureMenu()},
-			{value: "Background", menuView: new BackgroundMenu()},
-			{$template: "Separator"},
-			{value: "Emitter", menuView: new EmitterMenu()},
-			{value: "Life", id: "temp", menuView: new LifeMenu()},
-			{value: "Color", menuView: new ColorMenu()},
-			{value: "Position", menuView: new PositionMenu()}
-			//{value: "Size", menuView: new SizeMenu()}
-
-		],
+		data: subMenus,
 		on: {
 			onMenuItemClick: this.onMenuItemClick.bind(this)
 		}
 	};
 
+	var uiColumns = [menu];
+	for (var i = 0; i < subMenus.length; i++) {
+		var subMenu = subMenus[i];
+		if (subMenu.view) {
+			subMenu.view.ui.batch = i.toString();
+			uiColumns.push(subMenu.view.ui);
+		}
+	}
+
+	uiColumns.push({body: {content: "stage"}});
+
 	this.ui = webix.ui({
 		type: "space",
-		cols: [
-			menu,
-			{body: {content: "stage"}}
-		]
+		visibleBatch: "1",
+		cols: uiColumns
 	});
 
 	webix.event(window, "resize", function() {
 		$$("m1").define("height", window.innerHeight);
 	}.bind(this));
 
-	this.onMenuItemClick("temp");
 	service.msg.emit("menu/created");
 }
 
 Menu.prototype.onMenuItemClick = function(id) {
-	if (this.currentViewId) {
-		this.ui.removeView(this.currentViewId);
-	}
-
 	var item = $$("m1").getMenuItem(id);
-	this.currentViewId = this.ui.addView(item.menuView.ui, 1);
+	this.ui.showBatch(item.view.ui.batch);
 	this.ui.adjust();
 
 };

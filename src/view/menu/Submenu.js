@@ -3,7 +3,7 @@ var service = require("../../service");
 
 function SubMenu() {
 	this.WIDTH = 200;
-	service.msg.once("menu/created", this.onMenuCreated, this);
+	service.msg.on("menu/created", this.onMenuCreated.bind(this));
 }
 
 SubMenu.prototype.onMenuCreated = function() {
@@ -11,10 +11,13 @@ SubMenu.prototype.onMenuCreated = function() {
 
 SubMenu.prototype.bind = function(id, target, propertyName) {
 	$$(id).onChanged = function(newValue) {
+		console.log("onChanged", id, propertyName, newValue);
 		target[propertyName] = newValue;
 	};
 
 	service.msg.on("emitter/changed", function() {
+		console.log("emitter/change", id, propertyName, target[propertyName]);
+
 		$$(id).setValue(target[propertyName]);
 	});
 };
