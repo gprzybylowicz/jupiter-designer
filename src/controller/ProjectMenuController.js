@@ -1,11 +1,11 @@
 var file = require("../service").file;
-var msg = require("../service").msg;
+var service = require("../service");
 var projectModel = require("../model").projectModel;
 var predefinedModel = require("../model").predefinedModel;
 
 function ProjectMenuController() {
 	//this.loadPredefined();
-	msg.on("position/changed", this.onPositionChanged, this);
+	//msg.on("position/changed", this.onPositionChanged, this);
 }
 
 ProjectMenuController.prototype.saveProject = function() {
@@ -31,13 +31,14 @@ ProjectMenuController.prototype.reset = function() {
 
 ProjectMenuController.prototype.loadPredefined = function() {
 	var current = predefinedModel.getCurrent();
-	var parser = new jupiter.ConfigParser();
-	projectModel.emitter = parser.read(current);
+	projectModel.emitter.getParser().read(current);
 
+	console.log("loadPredefined", current);
+	//service.msg.emit("emitter/changed");
 };
 
 ProjectMenuController.prototype.onPositionChanged = function() {
-    console.log("position/changed");
+	console.log("position/changed");
 };
 
 module.exports = ProjectMenuController;

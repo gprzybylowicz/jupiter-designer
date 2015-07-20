@@ -10,13 +10,14 @@ function ParticleView() {
 	image.y = 150;
 	image.scale.set(2, 2);
 
-	//this.addChild(image);
+	this.addChild(image);
 
 	var config = {
 		texture: PIXI.Texture.fromFrame("sparkle.png")
 	};
 
 	var renderer = new PIXIRenderer(projectModel.emitter, config);
+	renderer.play();
 	this.addChild(renderer);
 }
 

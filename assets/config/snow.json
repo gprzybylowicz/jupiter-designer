@@ -4,7 +4,7 @@
       "priority": 10000,
       "maxLifeTime": 2.4,
       "timeVariance": 0.8823022574530415,
-      "type": "LifeBehaviour"
+      "name": "LifeBehaviour"
     },
     {
       "priority": 100,
@@ -32,7 +32,7 @@
         "x": 96.95067264573981,
         "y": 0
       },
-      "type": "PositionBehaviour"
+      "name": "PositionBehaviour"
     },
     {
       "priority": 0,
@@ -47,7 +47,7 @@
       },
       "startVariance": 0,
       "endVariance": 0,
-      "type": "SizeBehaviour"
+      "name": "SizeBehaviour"
     }
   ],
   "emitController": {
