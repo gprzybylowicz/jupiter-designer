@@ -1,7 +1,7 @@
 var SubMenu = require("./SubMenu.js");
 var util = require("../../util");
 var service = require("../../service");
-var lifeBehaviour = require("../../model").behaviourModel.lifeBehaviour;
+var behaviourModel = require("../../model").behaviourModel;
 
 function LifeMenu() {
 	SubMenu.call(this);
@@ -21,9 +21,12 @@ function LifeMenu() {
 util.inherit(LifeMenu, SubMenu);
 
 LifeMenu.prototype.onMenuCreated = function() {
-	this.bind("life_slider_time", lifeBehaviour, "maxLifeTime");
-	this.bind("life_slider_variance", lifeBehaviour, "timeVariance");
+	this.bind("life_slider_time", "maxLifeTime");
+	this.bind("life_slider_variance", "timeVariance");
 };
 
+LifeMenu.prototype.getBehaviour = function() {
+	return behaviourModel.getBehaviourByName("LifeBehaviour");
+};
 
 module.exports = LifeMenu;

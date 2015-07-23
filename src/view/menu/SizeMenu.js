@@ -48,12 +48,12 @@ SizeMenu.prototype.varianceSlider = function(id, label) {
 };
 
 SizeMenu.prototype.onMenuCreated = function() {
-	this.bind("start_size_x", sizeBehaviour.sizeStart, "x");
-	this.bind("start_size_y", sizeBehaviour.sizeStart, "y");
-	this.bind("end_size_x", sizeBehaviour.sizeEnd, "x");
-	this.bind("end_size_y", sizeBehaviour.sizeEnd, "y");
-	this.bind("start_size_variance", sizeBehaviour, "startVariance");
-	this.bind("end_size_variance", sizeBehaviour, "endVariance");
+	//this.bind("start_size_x", sizeBehaviour.sizeStart, "x");
+	//this.bind("start_size_y", sizeBehaviour.sizeStart, "y");
+	//this.bind("end_size_x", sizeBehaviour.sizeEnd, "x");
+	//this.bind("end_size_y", sizeBehaviour.sizeEnd, "y");
+	//this.bind("start_size_variance", sizeBehaviour, "startVariance");
+	//this.bind("end_size_variance", sizeBehaviour, "endVariance");
 };
 
 module.exports = SizeMenu;

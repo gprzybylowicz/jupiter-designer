@@ -2,7 +2,7 @@
   "behaviours": [
     {
       "priority": 10000,
-      "maxLifeTime": 2.4,
+      "maxLifeTime": 1.4,
       "timeVariance": 0.8823022574530415,
       "name": "LifeBehaviour"
     },

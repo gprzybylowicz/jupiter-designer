@@ -1,8 +1,27 @@
 function BehaviourModel() {
-	this.lifeBehaviour = new jupiter.LifeBehaviour();
-	this.positionBehaviour = new jupiter.PositionBehaviour();
-	this.colorBehaviour = new jupiter.ColorBehaviour();
-	this.sizeBehaviour = new jupiter.SizeBehaviour();
+
+	this.behaviours = {};
+	this.addBehaviour(new jupiter.LifeBehaviour());
+	this.addBehaviour(new jupiter.PositionBehaviour());
+	this.addBehaviour(new jupiter.ColorBehaviour());
+	this.addBehaviour(new jupiter.SizeBehaviour());
 }
+
+BehaviourModel.prototype.addBehaviour = function(behaviour) {
+	if (this.behaviours[behaviour.getName()]) {
+		this.behaviours[behaviour.getName()] = null;
+		delete this.behaviours[behaviour.getName()];
+	}
+
+	this.behaviours[behaviour.getName()] = behaviour;
+};
+
+BehaviourModel.prototype.getBehaviourByName = function(name) {
+	if (!this.behaviours[name]) {
+		throw new Error("No behaviour by given name = " + name);
+	}
+
+	return this.behaviours[name];
+};
 
 module.exports = BehaviourModel;

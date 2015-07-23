@@ -9,17 +9,32 @@ function SubMenu() {
 SubMenu.prototype.onMenuCreated = function() {
 };
 
-SubMenu.prototype.bind = function(id, target, propertyName) {
+SubMenu.prototype.bind = function(id, propertyName, getTargetFunction) {
+	getTargetFunction = getTargetFunction || this.getBehaviour;
+
 	$$(id).onChanged = function(newValue) {
-		console.log("onChanged", id, propertyName, newValue);
-		target[propertyName] = newValue;
+		console.log("onChanged", id, newValue, getTargetFunction());
+		getTargetFunction()[propertyName] = newValue;
 	};
 
 	service.msg.on("emitter/changed", function() {
-		console.log("emitter/change", id, propertyName, target[propertyName]);
+		console.log("emitter/change", id, getTargetFunction()[propertyName]);
 
-		$$(id).setValue(target[propertyName]);
+		var setValue = $$(id).config.setValue || $$(id).setValue;
+		setValue(getTargetFunction()[propertyName], getTargetFunction());
+		$$(id).refresh();
 	});
+};
+
+SubMenu.prototype.onActive = function() {
+	var rows = this.ui.rows;
+	for (var i = 0; i < rows.length; i++) {
+		$$(rows[i].id).refresh();
+	}
+};
+
+SubMenu.prototype.getBehaviour = function() {
+	throw new Error("Has to be overriden");
 };
 
 SubMenu.prototype.button = function(label, style) {

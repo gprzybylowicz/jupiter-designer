@@ -2,6 +2,7 @@ var file = require("../service").file;
 var service = require("../service");
 var projectModel = require("../model").projectModel;
 var predefinedModel = require("../model").predefinedModel;
+var behaviourModel = require("../model").behaviourModel;
 
 function ProjectMenuController() {
 	//this.loadPredefined();
@@ -33,8 +34,13 @@ ProjectMenuController.prototype.loadPredefined = function() {
 	var current = predefinedModel.getCurrent();
 	projectModel.emitter.getParser().read(current);
 
-	console.log("loadPredefined", current);
-	//service.msg.emit("emitter/changed");
+	var behaviours = projectModel.emitter.behaviours.getAll();
+	for (var i = 0; i < behaviours.length; i++) {
+		behaviourModel.addBehaviour(behaviours[i]);
+	}
+	service.msg.emit("emitter/changed");
+
+	//setTimeout(this.loadPredefined.bind(this), 2000);
 };
 
 ProjectMenuController.prototype.onPositionChanged = function() {

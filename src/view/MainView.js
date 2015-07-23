@@ -19,7 +19,7 @@ MainView.prototype.createStage = function() {
 MainView.prototype.createRenderer = function() {
 	//todo: autodetect renderer
 	//todo: dynamic size of renderer
-	var renderer = new PIXI.WebGLRenderer(400, 400);
+	var renderer = new PIXI.WebGLRenderer(600, 600);
 	document.getElementById("stage").appendChild(renderer.view);
 	return renderer;
 };

@@ -37,6 +37,7 @@ function Menu() {
 	for (var i = 0; i < subMenus.length; i++) {
 		var subMenu = subMenus[i];
 		if (subMenu.view) {
+			subMenu.view.ui.id = "submenu" + i;
 			subMenu.view.ui.batch = i.toString();
 			uiColumns.push(subMenu.view.ui);
 		}
@@ -60,7 +61,6 @@ function Menu() {
 Menu.prototype.onMenuItemClick = function(id) {
 	var item = $$("m1").getMenuItem(id);
 	this.ui.showBatch(item.view.ui.batch);
-	this.ui.adjust();
-
+	item.view.onActive();
 };
 module.exports = Menu;

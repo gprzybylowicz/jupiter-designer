@@ -34,15 +34,15 @@ ColorMenu.prototype.slider = function(id, label) {
 };
 
 ColorMenu.prototype.onMenuCreated = function() {
-	this.bind("start_variance_r", colorBehaviour.startVariance, "r");
-	this.bind("start_variance_g", colorBehaviour.startVariance, "g");
-	this.bind("start_variance_b", colorBehaviour.startVariance, "b");
-	this.bind("start_variance_alpha", colorBehaviour.startVariance, "alpha");
-
-	this.bind("end_variance_r", colorBehaviour.startVariance, "r");
-	this.bind("end_variance_g", colorBehaviour.startVariance, "g");
-	this.bind("end_variance_b", colorBehaviour.startVariance, "b");
-	this.bind("end_variance_alpha", colorBehaviour.startVariance, "alpha");
+	//this.bind("start_variance_r", colorBehaviour.startVariance, "r");
+	//this.bind("start_variance_g", colorBehaviour.startVariance, "g");
+	//this.bind("start_variance_b", colorBehaviour.startVariance, "b");
+	//this.bind("start_variance_alpha", colorBehaviour.startVariance, "alpha");
+	//
+	//this.bind("end_variance_r", colorBehaviour.startVariance, "r");
+	//this.bind("end_variance_g", colorBehaviour.startVariance, "g");
+	//this.bind("end_variance_b", colorBehaviour.startVariance, "b");
+	//this.bind("end_variance_alpha", colorBehaviour.startVariance, "alpha");
 };
 
 module.exports = ColorMenu;

@@ -54,20 +54,20 @@ PositionMenu.prototype.varianceSlider = function(id, label) {
 };
 
 PositionMenu.prototype.onMenuCreated = function() {
-	this.bind("position_x", positionBehaviour.position, "x");
-	this.bind("position_y", positionBehaviour.position, "y");
-	this.bind("position_variance_x", positionBehaviour.positionVariance, "x");
-	this.bind("position_variance_y", positionBehaviour.positionVariance, "y");
-
-	this.bind("velocity_x", positionBehaviour.velocity, "x");
-	this.bind("velocity_y", positionBehaviour.velocity, "y");
-	this.bind("velocity_variance_x", positionBehaviour.velocityVariance, "x");
-	this.bind("velocity_variance_y", positionBehaviour.velocityVariance, "y");
-
-	this.bind("acceleration_x", positionBehaviour.acceleration, "x");
-	this.bind("acceleration_y", positionBehaviour.acceleration, "y");
-	this.bind("acceleration_variance_x", positionBehaviour.accelerationVariance, "x");
-	this.bind("acceleration_variance_y", positionBehaviour.accelerationVariance, "y");
+	//this.bind("position_x", positionBehaviour.position, "x");
+	//this.bind("position_y", positionBehaviour.position, "y");
+	//this.bind("position_variance_x", positionBehaviour.positionVariance, "x");
+	//this.bind("position_variance_y", positionBehaviour.positionVariance, "y");
+	//
+	//this.bind("velocity_x", positionBehaviour.velocity, "x");
+	//this.bind("velocity_y", positionBehaviour.velocity, "y");
+	//this.bind("velocity_variance_x", positionBehaviour.velocityVariance, "x");
+	//this.bind("velocity_variance_y", positionBehaviour.velocityVariance, "y");
+	//
+	//this.bind("acceleration_x", positionBehaviour.acceleration, "x");
+	//this.bind("acceleration_y", positionBehaviour.acceleration, "y");
+	//this.bind("acceleration_variance_x", positionBehaviour.accelerationVariance, "x");
+	//this.bind("acceleration_variance_y", positionBehaviour.accelerationVariance, "y");
 };
 
 module.exports = PositionMenu;
