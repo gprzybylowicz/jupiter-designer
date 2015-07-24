@@ -1,6 +1,6 @@
 var SubMenu = require("./SubMenu.js");
 var inherit = require("../../util").inherit;
-var colorBehaviour = require("../../model").behaviourModel.colorBehaviour;
+var behaviourModel = require("../../model").behaviourModel;
 
 function ColorMenu() {
 	SubMenu.call(this);
@@ -34,15 +34,27 @@ ColorMenu.prototype.slider = function(id, label) {
 };
 
 ColorMenu.prototype.onMenuCreated = function() {
-	//this.bind("start_variance_r", colorBehaviour.startVariance, "r");
-	//this.bind("start_variance_g", colorBehaviour.startVariance, "g");
-	//this.bind("start_variance_b", colorBehaviour.startVariance, "b");
-	//this.bind("start_variance_alpha", colorBehaviour.startVariance, "alpha");
-	//
-	//this.bind("end_variance_r", colorBehaviour.startVariance, "r");
-	//this.bind("end_variance_g", colorBehaviour.startVariance, "g");
-	//this.bind("end_variance_b", colorBehaviour.startVariance, "b");
-	//this.bind("end_variance_alpha", colorBehaviour.startVariance, "alpha");
+	this.bind("start_variance_r", "r", this.getStartVariance);
+	this.bind("start_variance_g", "g", this.getStartVariance);
+	this.bind("start_variance_b", "b", this.getStartVariance);
+	this.bind("start_variance_alpha", "alpha", this.getStartVariance);
+
+	this.bind("end_variance_r", "r", this.getEndVariance);
+	this.bind("end_variance_g", "g", this.getEndVariance);
+	this.bind("end_variance_b", "b", this.getEndVariance);
+	this.bind("end_variance_alpha", "alpha", this.getEndVariance);
+};
+
+ColorMenu.prototype.getStartVariance = function() {
+	return this.getBehaviour().startVariance;
+};
+
+ColorMenu.prototype.getEndVariance = function() {
+	return this.getBehaviour().endVariance;
+};
+
+ColorMenu.prototype.getBehaviour = function() {
+	return behaviourModel.getBehaviourByName("ColorBehaviour");
 };
 
 module.exports = ColorMenu;
