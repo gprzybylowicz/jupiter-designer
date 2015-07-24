@@ -1,9 +1,11 @@
 var SubMenu = require("./SubMenu.js");
 var inherit = require("../../util").inherit;
-var positionBehaviour = require("../../model").behaviourModel.positionBehaviour;
+var bind = require("../../util").bind;
+var behaviourModel = require("../../model").behaviourModel;
 
 function PositionMenu() {
 	SubMenu.call(this);
+	bind(this);
 
 	this.ui = {
 		rows: [
@@ -34,8 +36,9 @@ PositionMenu.prototype.positionSlider = function(id, label) {
 	var slider = this.slider(label, {
 		id: id,
 		labelWidth: 30,
-		min: -1000,
-		max: 1000,
+		min: -500,
+		max: 500,
+		step: 1,
 		value: 0
 	});
 
@@ -46,7 +49,9 @@ PositionMenu.prototype.varianceSlider = function(id, label) {
 	var slider = this.slider(label, {
 		id: id,
 		labelWidth: 30,
-		max: 1000,
+		min: 0,
+		max: 500,
+		step: 1,
 		value: 0
 	});
 
@@ -54,20 +59,48 @@ PositionMenu.prototype.varianceSlider = function(id, label) {
 };
 
 PositionMenu.prototype.onMenuCreated = function() {
-	//this.bind("position_x", positionBehaviour.position, "x");
-	//this.bind("position_y", positionBehaviour.position, "y");
-	//this.bind("position_variance_x", positionBehaviour.positionVariance, "x");
-	//this.bind("position_variance_y", positionBehaviour.positionVariance, "y");
-	//
-	//this.bind("velocity_x", positionBehaviour.velocity, "x");
-	//this.bind("velocity_y", positionBehaviour.velocity, "y");
-	//this.bind("velocity_variance_x", positionBehaviour.velocityVariance, "x");
-	//this.bind("velocity_variance_y", positionBehaviour.velocityVariance, "y");
-	//
-	//this.bind("acceleration_x", positionBehaviour.acceleration, "x");
-	//this.bind("acceleration_y", positionBehaviour.acceleration, "y");
-	//this.bind("acceleration_variance_x", positionBehaviour.accelerationVariance, "x");
-	//this.bind("acceleration_variance_y", positionBehaviour.accelerationVariance, "y");
+	this.bind("position_x", "x", this.getPosition);
+	this.bind("position_y", "y", this.getPosition);
+	this.bind("position_variance_x", "x", this.getPositionVariance);
+	this.bind("position_variance_y", "y", this.getPositionVariance);
+
+	this.bind("velocity_x", "x", this.getVelocity);
+	this.bind("velocity_y", "y", this.getVelocity);
+	this.bind("velocity_variance_x", "x", this.getVelocityVariance);
+	this.bind("velocity_variance_y", "y", this.getVelocityVariance);
+
+	this.bind("acceleration_x", "x", this.getAcceleration);
+	this.bind("acceleration_y", "y", this.getAcceleration);
+	this.bind("acceleration_variance_x", "x", this.getAccelerationVariance);
+	this.bind("acceleration_variance_y", "y", this.getAccelerationVariance);
+};
+
+PositionMenu.prototype.getPosition = function() {
+	return this.getBehaviour().position;
+};
+
+PositionMenu.prototype.getPositionVariance = function() {
+	return this.getBehaviour().positionVariance;
+};
+
+PositionMenu.prototype.getVelocity = function() {
+	return this.getBehaviour().velocity;
+};
+
+PositionMenu.prototype.getVelocityVariance = function() {
+	return this.getBehaviour().velocityVariance;
+};
+
+PositionMenu.prototype.getAcceleration = function() {
+	return this.getBehaviour().acceleration;
+};
+
+PositionMenu.prototype.getAccelerationVariance = function() {
+	return this.getBehaviour().accelerationVariance;
+};
+
+PositionMenu.prototype.getBehaviour = function() {
+	return behaviourModel.getBehaviourByName("PositionBehaviour");
 };
 
 module.exports = PositionMenu;

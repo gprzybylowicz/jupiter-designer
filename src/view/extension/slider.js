@@ -7,11 +7,12 @@ module.exports = function(title, style) {
 
 	style.step = 1;
 	style.title = title + " " + style.value;
-	style.max = (max - min) / step;
+	style.min = min / step;
+	style.max = max / step;
 	style.value = (style.value - min) / step;
 
 	var update = function(slider, invokeOnChanged) {
-		var value = ((slider.getValue() * step) + min).toFixed(step < 1 ? 2 : 0);
+		var value = ((slider.getValue() * step)).toFixed(step < 1 ? 2 : 0);
 		slider.define("title", title + " " + value);
 		slider.refresh();
 
@@ -21,12 +22,12 @@ module.exports = function(title, style) {
 	};
 
 	style.setValue = function(value) {
-		$$(style.id).config.value = (value / step);
+		$$(style.id).config.value = ((value) / step);
 		update($$(style.id), false);
 	};
 
 	style.on = {
-		onChange: function(){
+		onChange: function() {
 			update(this, true);
 		},
 		onSliderDrag: function() {

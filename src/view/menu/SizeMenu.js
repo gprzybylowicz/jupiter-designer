@@ -1,9 +1,10 @@
 var SubMenu = require("./SubMenu.js");
-var inherit = require("../../util").inherit;
-var sizeBehaviour = require("../../model").behaviourModel.sizeBehaviour;
+var util = require("../../util");
+var behaviourModel = require("../../model").behaviourModel;
 
 function SizeMenu() {
 	SubMenu.call(this);
+	util.bind(this);
 
 	this.ui = {
 		rows: [
@@ -21,7 +22,7 @@ function SizeMenu() {
 	};
 }
 
-inherit(SizeMenu, SubMenu);
+util.inherit(SizeMenu, SubMenu);
 
 SizeMenu.prototype.positionSlider = function(id, label) {
 	var slider = this.slider(label, {
@@ -48,12 +49,24 @@ SizeMenu.prototype.varianceSlider = function(id, label) {
 };
 
 SizeMenu.prototype.onMenuCreated = function() {
-	//this.bind("start_size_x", sizeBehaviour.sizeStart, "x");
-	//this.bind("start_size_y", sizeBehaviour.sizeStart, "y");
-	//this.bind("end_size_x", sizeBehaviour.sizeEnd, "x");
-	//this.bind("end_size_y", sizeBehaviour.sizeEnd, "y");
-	//this.bind("start_size_variance", sizeBehaviour, "startVariance");
-	//this.bind("end_size_variance", sizeBehaviour, "endVariance");
+	this.bind("start_size_x", "x", this.getSizeStart);
+	this.bind("start_size_y", "y", this.getSizeStart);
+	this.bind("end_size_x", "x", this.getSizeEnd);
+	this.bind("end_size_y", "y", this.getSizeEnd);
+	this.bind("start_size_variance", "startVariance");
+	this.bind("end_size_variance", "endVariance");
+};
+
+SizeMenu.prototype.getSizeStart = function() {
+	return this.getBehaviour().sizeStart;
+};
+
+SizeMenu.prototype.getSizeEnd = function() {
+	return this.getBehaviour().sizeEnd;
+};
+
+SizeMenu.prototype.getBehaviour = function() {
+	return behaviourModel.getBehaviourByName("SizeBehaviour");
 };
 
 module.exports = SizeMenu;
