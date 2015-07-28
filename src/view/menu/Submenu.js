@@ -13,12 +13,12 @@ SubMenu.prototype.bind = function(id, propertyName, getTargetFunction) {
 	getTargetFunction = getTargetFunction || this.getBehaviour;
 
 	$$(id).onChanged = function(newValue) {
-		console.log("onChanged", id, newValue, getTargetFunction());
+		//console.log("onChanged", id, newValue, getTargetFunction());
 		getTargetFunction()[propertyName] = newValue;
 	};
 
 	service.msg.on("emitter/changed", function() {
-		console.log("emitter/change", id, getTargetFunction()[propertyName]);
+		//console.log("emitter/change", id, getTargetFunction()[propertyName]);
 
 		var setValue = $$(id).config.setValue || $$(id).setValue;
 		setValue(getTargetFunction()[propertyName], getTargetFunction());

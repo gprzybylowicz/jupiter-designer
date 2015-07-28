@@ -39,12 +39,6 @@ ProjectMenuController.prototype.loadPredefined = function() {
 		behaviourModel.addBehaviour(behaviours[i]);
 	}
 	service.msg.emit("emitter/changed");
-
-	//setTimeout(this.loadPredefined.bind(this), 2000);
-};
-
-ProjectMenuController.prototype.onPositionChanged = function() {
-	console.log("position/changed");
 };
 
 module.exports = ProjectMenuController;

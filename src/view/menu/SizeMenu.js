@@ -1,6 +1,8 @@
 var SubMenu = require("./SubMenu.js");
 var util = require("../../util");
 var behaviourModel = require("../../model").behaviourModel;
+var projectModel = require("../../model").projectModel;
+var service = require("../../service");
 
 function SizeMenu() {
 	SubMenu.call(this);
@@ -8,7 +10,7 @@ function SizeMenu() {
 
 	this.ui = {
 		rows: [
-			this.checkbox("Enabled: ", {value: 0}),
+			this.checkbox("Enabled: ", {id: "size_enable", value: 0}),
 			this.section("Start size: "),
 			this.positionSlider("start_size_x", "X: "),
 			this.positionSlider("start_size_y", "Y: "),
@@ -55,6 +57,17 @@ SizeMenu.prototype.onMenuCreated = function() {
 	this.bind("end_size_y", "y", this.getSizeEnd);
 	this.bind("start_size_variance", "startVariance");
 	this.bind("end_size_variance", "endVariance");
+
+	$$("size_enable").attachEvent("onChange", this.onEnableChanged);
+	service.msg.on("emitter/changed", this.onEmitterChanged);
+};
+
+SizeMenu.prototype.onEnableChanged = function(value) {
+	service.msg.emit("behaviour/setEnable", value, this.getBehaviour());
+};
+
+SizeMenu.prototype.onEmitterChanged = function() {
+	$$("size_enable").setValue(projectModel.hasActiveBehaviour(this.getBehaviour()));
 };
 
 SizeMenu.prototype.getSizeStart = function() {

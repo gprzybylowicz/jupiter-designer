@@ -1,13 +1,16 @@
 var SubMenu = require("./SubMenu.js");
-var inherit = require("../../util").inherit;
+var util = require("../../util");
 var behaviourModel = require("../../model").behaviourModel;
+var projectModel = require("../../model").projectModel;
+var service = require("../../service");
 
 function ColorMenu() {
 	SubMenu.call(this);
+	util.bind(this);
 
 	this.ui = {
 		rows: [
-			this.checkbox("Enabled:", {value: 0}),
+			this.checkbox("Enabled:", {id: "color_enable", value: 0}),
 			{view: "colorpicker", label: "Start", name: "color", value: "#ffffff"},
 			{view: "colorpicker", label: "End", name: "color", value: "#ffffff"},
 			this.section("Start variance:"),
@@ -25,7 +28,7 @@ function ColorMenu() {
 	};
 }
 
-inherit(ColorMenu, SubMenu);
+util.inherit(ColorMenu, SubMenu);
 
 ColorMenu.prototype.slider = function(id, label) {
 	return SubMenu.prototype.slider.call(this, "", {
@@ -43,6 +46,17 @@ ColorMenu.prototype.onMenuCreated = function() {
 	this.bind("end_variance_g", "g", this.getEndVariance);
 	this.bind("end_variance_b", "b", this.getEndVariance);
 	this.bind("end_variance_alpha", "alpha", this.getEndVariance);
+
+	$$("color_enable").attachEvent("onChange", this.onEnableChanged);
+	service.msg.on("emitter/changed", this.onEmitterChanged);
+};
+
+ColorMenu.prototype.onEnableChanged = function(value) {
+	service.msg.emit("behaviour/setEnable", value, this.getBehaviour());
+};
+
+ColorMenu.prototype.onEmitterChanged = function() {
+	$$("color_enable").setValue(projectModel.hasActiveBehaviour(this.getBehaviour()));
 };
 
 ColorMenu.prototype.getStartVariance = function() {

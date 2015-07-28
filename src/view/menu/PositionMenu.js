@@ -2,6 +2,8 @@ var SubMenu = require("./SubMenu.js");
 var inherit = require("../../util").inherit;
 var bind = require("../../util").bind;
 var behaviourModel = require("../../model").behaviourModel;
+var projectModel = require("../../model").projectModel;
+var service = require("../../service");
 
 function PositionMenu() {
 	SubMenu.call(this);
@@ -9,7 +11,7 @@ function PositionMenu() {
 
 	this.ui = {
 		rows: [
-			this.checkbox("Enabled: ", {value: 0}),
+			this.checkbox("Enabled: ", {id: "position_enable", value: 0}),
 			this.section("Position: "),
 			this.positionSlider("position_x", "X: "),
 			this.positionSlider("position_y", "Y: "),
@@ -73,6 +75,17 @@ PositionMenu.prototype.onMenuCreated = function() {
 	this.bind("acceleration_y", "y", this.getAcceleration);
 	this.bind("acceleration_variance_x", "x", this.getAccelerationVariance);
 	this.bind("acceleration_variance_y", "y", this.getAccelerationVariance);
+
+	$$("position_enable").attachEvent("onChange", this.onEnableChanged);
+	service.msg.on("emitter/changed", this.onEmitterChanged);
+};
+
+PositionMenu.prototype.onEnableChanged = function(value) {
+	service.msg.emit("behaviour/setEnable", value, this.getBehaviour());
+};
+
+PositionMenu.prototype.onEmitterChanged = function() {
+	$$("position_enable").setValue(projectModel.hasActiveBehaviour(this.getBehaviour()));
 };
 
 PositionMenu.prototype.getPosition = function() {

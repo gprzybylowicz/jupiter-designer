@@ -1,21 +1,36 @@
 var projectModel = require("../model").projectModel;
-var behaviourModel = require("../model").behaviourModel;
+var service = require("../service");
+var util = require("../util");
 
 function BehaviourController() {
-	//projectModel.emitter.emitController.emitPerSecond = 30;
-	//projectModel.emitter.behaviours.add(behaviourModel.lifeBehaviour);
-	//
-	//todo: remove it
-	//projectModel.emitter.behaviours.add(behaviourModel.positionBehaviour);
-	//projectModel.emitter.behaviours.add(behaviourModel.sizeBehaviour);
-	//projectModel.emitter.behaviours.add(behaviourModel.colorBehaviour);
+	util.bind(this);
+	service.msg.on("behaviour/setEnable", this.onSetEnable);
 }
 
+BehaviourController.prototype.onSetEnable = function(enable, behaviour) {
+	if (enable) {
+		this.enableBehaviour(behaviour);
+	}
+	else {
+		this.disableBehaviour(behaviour);
+	}
+};
+
 BehaviourController.prototype.enableBehaviour = function(behaviour) {
-	projectModel.emitter.behaviours.add(behaviour);
+	if (!projectModel.hasActiveBehaviour(behaviour)) {
+		projectModel.emitter.behaviours.add(behaviour);
+	}
 };
 
 BehaviourController.prototype.disableBehaviour = function(behaviour) {
+	var behaviours = projectModel.emitter.behaviours.getAll();
+	projectModel.emitter.behaviours.clear();
+
+	for (var i = 0; i < behaviours.length; ++i) {
+		if (behaviours[i].getName() !== behaviour.getName()) {
+			projectModel.emitter.behaviours.add(behaviours[i]);
+		}
+	}
 
 };
 
