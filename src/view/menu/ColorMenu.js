@@ -11,8 +11,8 @@ function ColorMenu() {
 	this.ui = {
 		rows: [
 			this.checkbox("Enabled:", {id: "color_enable", value: 0}),
-			{view: "colorpicker", label: "Start", name: "color", value: "#ffffff"},
-			{view: "colorpicker", label: "End", name: "color", value: "#ffffff"},
+			{view: "colorpicker", id: "color_start", label: "Start", name: "color", value: "#ffffff"},
+			{view: "colorpicker", id: "color_end", label: "End", name: "color", value: "#ffffff"},
 			this.section("Start variance:"),
 			this.slider("start_variance_r", "R:"),
 			this.slider("start_variance_g", "G:"),
@@ -49,6 +49,17 @@ ColorMenu.prototype.onMenuCreated = function() {
 
 	$$("color_enable").attachEvent("onChange", this.onEnableChanged);
 	service.msg.on("emitter/changed", this.onEmitterChanged);
+
+	$$("color_start").attachEvent("onChange", this.onStartColorChanged);
+	$$("color_end").attachEvent("onChange", this.onEndColorChanged);
+};
+
+ColorMenu.prototype.onStartColorChanged = function() {
+	this.getBehaviour().start.hex = $$("color_start").getValue().replace("#", "0x");
+};
+
+ColorMenu.prototype.onEndColorChanged = function() {
+	this.getBehaviour().end.hex = $$("color_end").getValue().replace("#", "0x");
 };
 
 ColorMenu.prototype.onEnableChanged = function(value) {
@@ -57,6 +68,9 @@ ColorMenu.prototype.onEnableChanged = function(value) {
 
 ColorMenu.prototype.onEmitterChanged = function() {
 	$$("color_enable").setValue(projectModel.hasActiveBehaviour(this.getBehaviour()));
+
+	$$("color_start").setValue("#" + this.getBehaviour().start.hex);
+	$$("color_end").setValue("#" + this.getBehaviour().end.hex);
 };
 
 ColorMenu.prototype.getStartVariance = function() {
