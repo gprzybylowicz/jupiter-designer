@@ -6,7 +6,9 @@ var behaviourModel = require("../model").behaviourModel;
 
 function ProjectMenuController() {
 	//this.loadPredefined();
-	//msg.on("position/changed", this.onPositionChanged, this);
+	service.msg.on("project/exportConfig", this.onExportConfig, this);
+	service.msg.on("project/loadConfig", this.onLoadConfig, this);
+
 }
 
 ProjectMenuController.prototype.saveProject = function() {
@@ -17,13 +19,19 @@ ProjectMenuController.prototype.loadProject = function() {
 
 };
 
-ProjectMenuController.prototype.export = function() {
-	var parser = new jupiter.ConfigParser();
-	file.saveAsJson("particle_config", parser.write(projectModel.emitter));
+ProjectMenuController.prototype.onExportConfig = function() {
+	file.saveAsJson("particle_config", projectModel.emitter.getParser().write());
 };
 
-ProjectMenuController.prototype.load = function() {
+ProjectMenuController.prototype.onLoadConfig = function() {
+	console.log("load");
+	var reader = new FileReader();
+	reader.onload = function() {
+		var data = JSON.parse(reader.result);
+		this.loadConfig(data);
+	}.bind(this);
 
+	reader.readAsText(document.getElementById("load-config").files[0]);
 };
 
 ProjectMenuController.prototype.reset = function() {
@@ -31,8 +39,11 @@ ProjectMenuController.prototype.reset = function() {
 };
 
 ProjectMenuController.prototype.loadPredefined = function() {
-	var current = predefinedModel.getCurrent();
-	projectModel.emitter.getParser().read(current);
+	this.loadConfig(predefinedModel.getCurrent());
+};
+
+ProjectMenuController.prototype.loadConfig = function(config) {
+	projectModel.emitter.getParser().read(config);
 
 	var behaviours = projectModel.emitter.behaviours.getAll();
 	for (var i = 0; i < behaviours.length; i++) {
