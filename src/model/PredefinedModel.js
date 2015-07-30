@@ -1,11 +1,23 @@
-var snow = require("../../assets/config/snow.json");
+var CONFIG = {
+	snow: require("../../assets/config/snow.json"),
+	snow2: require("../../assets/config/snow2.json"),
+	test: require("../../assets/config/test.json")
+};
 
 function PredefinedModel() {
 
 }
 
-PredefinedModel.prototype.getCurrent = function() {
-	return snow;
+PredefinedModel.prototype.getByName = function(name) {
+	return CONFIG[name];
+};
+
+PredefinedModel.prototype.getAllConfigs = function() {
+	return CONFIG; //todo: concat?
+};
+
+PredefinedModel.prototype.getNames = function() {
+	return Object.keys(CONFIG);
 };
 
 module.exports = PredefinedModel;

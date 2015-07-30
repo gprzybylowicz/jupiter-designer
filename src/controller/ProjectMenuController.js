@@ -5,10 +5,9 @@ var predefinedModel = require("../model").predefinedModel;
 var behaviourModel = require("../model").behaviourModel;
 
 function ProjectMenuController() {
-	//this.loadPredefined();
 	service.msg.on("project/exportConfig", this.onExportConfig, this);
 	service.msg.on("project/loadConfig", this.onLoadConfig, this);
-
+	service.msg.on("project/loadPredefined", this.onLoadPredefined, this);
 }
 
 ProjectMenuController.prototype.saveProject = function() {
@@ -38,11 +37,12 @@ ProjectMenuController.prototype.reset = function() {
 
 };
 
-ProjectMenuController.prototype.loadPredefined = function() {
-	this.loadConfig(predefinedModel.getCurrent());
+ProjectMenuController.prototype.onLoadPredefined = function(name) {
+	this.loadConfig(predefinedModel.getByName(name));
 };
 
 ProjectMenuController.prototype.loadConfig = function(config) {
+	console.log(config);
 	projectModel.emitter.getParser().read(config);
 
 	var behaviours = projectModel.emitter.behaviours.getAll();

@@ -1,11 +1,9 @@
 {
-  "configName": "snow",
-
   "behaviours": [
     {
       "priority": 10000,
       "maxLifeTime": 1.4,
-      "timeVariance": 0.8823022574530415,
+      "timeVariance": 2.5,
       "name": "LifeBehaviour"
     },
     {
@@ -50,6 +48,34 @@
       "startVariance": 0,
       "endVariance": 0,
       "name": "SizeBehaviour"
+    },
+    {
+      "priority": 0,
+      "start": {
+        "_r": 221,
+        "_g": 0,
+        "_b": 221,
+        "_alpha": 1
+      },
+      "end": {
+        "_r": 110,
+        "_g": 255,
+        "_b": 110,
+        "_alpha": 1
+      },
+      "startVariance": {
+        "_r": 0,
+        "_g": 0,
+        "_b": 0,
+        "_alpha": 1
+      },
+      "endVariance": {
+        "_r": 0,
+        "_g": 0,
+        "_b": 0,
+        "_alpha": 1
+      },
+      "name": "ColorBehaviour"
     }
   ],
   "emitController": {

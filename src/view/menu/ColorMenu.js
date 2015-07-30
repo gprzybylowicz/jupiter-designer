@@ -69,8 +69,8 @@ ColorMenu.prototype.onEnableChanged = function(value) {
 ColorMenu.prototype.onEmitterChanged = function() {
 	$$("color_enable").setValue(projectModel.hasActiveBehaviour(this.getBehaviour()));
 
-	$$("color_start").setValue("#" + this.getBehaviour().start.hex);
-	$$("color_end").setValue("#" + this.getBehaviour().end.hex);
+	$$("color_start").setValue("#" + this.getBehaviour().start.hex.toString(16));
+	$$("color_end").setValue("#" + this.getBehaviour().end.hex.toString(16));
 };
 
 ColorMenu.prototype.getStartVariance = function() {
