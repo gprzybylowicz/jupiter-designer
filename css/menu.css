@@ -1,0 +1,15 @@
+.texture-preview {
+    width: 100px;
+    height: 100px;
+    background-color: lightgray;
+    display: table-cell;
+    /*horizontal-align: center;*/
+    vertical-align: middle;
+}
+
+
+
+.texture-preview-content {
+    max-width: 100%;
+    max-height: 100%;
+}

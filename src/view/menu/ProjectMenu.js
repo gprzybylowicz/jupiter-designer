@@ -33,8 +33,6 @@ ProjectMenu.prototype.onExportConfig = function() {
 };
 
 ProjectMenu.prototype.onLoadPredefined = function() {
-	//controller.loadPredefined();
-
 	var data = predefinedModel.getNames().map(function(name) {
 		return {view: "text", value: name};
 	});

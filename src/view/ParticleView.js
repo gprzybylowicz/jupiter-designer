@@ -1,6 +1,7 @@
 var inherit = require("../util").inherit;
-var PIXIRenderer = require("../PIXIRenderer.js");
+var ParticleRenderer = require("./ParticleRenderer.js");
 var projectModel = require("../model").projectModel;
+var texturesModel = require("../model").texturesModel;
 
 function ParticleView() {
 	PIXI.Container.call(this);
@@ -36,10 +37,10 @@ function ParticleView() {
 	this.addChild(image);
 
 	var config = {
-		texture: PIXI.Texture.fromFrame("sparkle.png")
+		texture: texturesModel.getCurrentTexture()
 	};
 
-	var renderer = new PIXIRenderer(projectModel.emitter, config);
+	var renderer = new ParticleRenderer(projectModel.emitter, config);
 	renderer.play();
 	this.addChild(renderer);
 }

@@ -71,4 +71,5 @@ PIXIRenderer.prototype.onRemove = function(particle) {
 	this.unusedSprites.push(sprite);
 };
 
+
 module.exports = PIXIRenderer;
