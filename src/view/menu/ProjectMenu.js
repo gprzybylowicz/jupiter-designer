@@ -59,7 +59,6 @@ ProjectMenu.prototype.onLoadPredefined = function() {
 };
 
 ProjectMenu.prototype.onPredefinedClick = function(id) {
-	//console.log($$("choose_predefined_menu").getMenuItem(id));
 	service.msg.emit("project/loadPredefined", $$("choose_predefined_menu").getMenuItem(id).value);
 	$$("choose_predefined_window").hide();
 	$$("choose_predefined_window").close();

@@ -23,7 +23,6 @@ ProjectMenuController.prototype.onExportConfig = function() {
 };
 
 ProjectMenuController.prototype.onLoadConfig = function() {
-	console.log("load");
 	var reader = new FileReader();
 	reader.onload = function() {
 		var data = JSON.parse(reader.result);
@@ -42,7 +41,6 @@ ProjectMenuController.prototype.onLoadPredefined = function(name) {
 };
 
 ProjectMenuController.prototype.loadConfig = function(config) {
-	console.log(config);
 	projectModel.emitter.getParser().read(config);
 
 	var behaviours = projectModel.emitter.behaviours.getAll();

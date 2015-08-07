@@ -11,10 +11,10 @@ function TexturesModel() {
 }
 
 TexturesModel.prototype.setDefaultTexture = function() {
-	this.changeTexture("circle");
+	this.setTextureByName("circle");
 };
 
-TexturesModel.prototype.changeTexture = function(name) {
+TexturesModel.prototype.setTextureByName = function(name) {
 	var url;
 	for (var i = 0; i < this.textures.length; i++) {
 		if (this.textures[i].name === name) {
@@ -24,6 +24,9 @@ TexturesModel.prototype.changeTexture = function(name) {
 	this.currentTexture = PIXI.Texture.fromFrame(url);
 };
 
+TexturesModel.prototype.setTexture = function(texture) {
+	this.currentTexture = texture;
+};
 TexturesModel.prototype.getCurrentTexture = function() {
 	return this.currentTexture;
 };

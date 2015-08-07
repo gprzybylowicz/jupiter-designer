@@ -11,17 +11,26 @@ function TextureMenu() {
 
 	this.ui = {
 		rows: [
-			this.button("Export texture"),
-			this.button("Upload texture"),
+			//this.button("Export texture"),
+			this.button("Upload texture", {click: this.onUploadTexture}),
 			this.button("Show all", {click: this.onShowAll}),
 			this.texturePreview()
 		]
+	};
+
+	//todo: refactor
+	document.getElementById("load-texture").onchange = function() {
+		service.msg.emit("texture/upload");
 	};
 }
 
 util.inherit(TextureMenu, SubMenu);
 
 module.exports = TextureMenu;
+
+TextureMenu.prototype.onUploadTexture = function() {
+	document.getElementById("load-texture").click();
+};
 
 TextureMenu.prototype.texturePreview = function() {
 	return {
