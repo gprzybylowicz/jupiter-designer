@@ -8,6 +8,12 @@ function MainView() {
 	this.particleView = this.createParticleView();
 	this.menu = this.createMenu();
 
+	this.stage.interactive = true;
+	this.stage.hitArea = new PIXI.Rectangle(0, 0, 600, 600);
+	this.stage.mousemove = this.stage.touchmove = function() {
+		console.log("ss");
+	};
+
 	this.draw();
 
 }
