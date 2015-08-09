@@ -2,14 +2,14 @@ var backgroundModel = require("../model").backgroundModel;
 var service = require("../service");
 
 function BackgroundMenuController() {
-	service.msg.on("background/lock", this.onLock);
+	service.msg.on("background/changeLocked", this.onChangeLocked);
 	service.msg.on("background/changeColor", this.onChangeColor);
 	service.msg.on("background/loadTexture", this.onLoadTexture);
 	service.msg.on("background/removeTexture", this.onRemoveTexture);
 }
 
-BackgroundMenuController.prototype.onLock = function(value) {
-	backgroundModel.isLocked = value;
+BackgroundMenuController.prototype.onChangeLocked = function() {
+	backgroundModel.isLocked = !backgroundModel.isLocked;
 };
 
 BackgroundMenuController.prototype.onChangeColor = function(value) {
@@ -17,8 +17,6 @@ BackgroundMenuController.prototype.onChangeColor = function(value) {
 };
 
 BackgroundMenuController.prototype.onLoadTexture = function() {
-	console.log("onTextureChanged");
-
 	var reader = new FileReader();
 	reader.onload = function() {
 		backgroundModel.texture = PIXI.Texture.fromImage(reader.result);

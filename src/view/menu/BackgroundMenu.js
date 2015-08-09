@@ -21,8 +21,10 @@ util.inherit(BackgroundMenu, SubMenu);
 
 BackgroundMenu.prototype.onMenuCreated = function() {
 	$$("background_color").attachEvent("onChange", this.onColorChanged);
+	$$("lock_enable").attachEvent("onChange", this.onLockChanged);
 
 	//todo: refactor
+
 	document.getElementById("load-background").onchange = function() {
 		service.msg.emit("background/loadTexture");
 	};
@@ -41,4 +43,7 @@ BackgroundMenu.prototype.onRemoveBackground = function() {
 	service.msg.emit("background/removeTexture");
 };
 
+BackgroundMenu.prototype.onLockChanged = function() {
+	service.msg.emit("background/changeLocked");
+};
 module.exports = BackgroundMenu;

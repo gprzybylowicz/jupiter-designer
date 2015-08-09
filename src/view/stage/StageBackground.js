@@ -9,14 +9,19 @@ function StageBackground() {
 	backgroundModel.on("isLocked/changed", this.onIsLockedChanged);
 	backgroundModel.on("texture/changed", this.onTextureChanged);
 
+	this.mousedown = this.touchstart = this.onMouseDown;
+	this.mouseup = this.mouseupoutside = this.touchend = this.touchendoutside = this.onMouseUp;
+	this.mousemove = this.touchmove = this.onMouseMove;
+
 	this.onIsLockedChanged();
 }
 
 util.inherit(StageBackground, PIXI.Container);
 
 StageBackground.prototype.onIsLockedChanged = function() {
-	this.interactive = backgroundModel.isLocked;
-	this.buttonMode = backgroundModel.isLocked;
+	console.log("locked", backgroundModel.isLocked);
+	this.interactive = !backgroundModel.isLocked;
+	this.buttonMode = !backgroundModel.isLocked;
 };
 
 StageBackground.prototype.onTextureChanged = function() {
@@ -34,6 +39,21 @@ StageBackground.prototype.createImage = function() {
 	var image = new PIXI.Sprite(PIXI.Texture.EMPTY);
 	image.anchor.set(0.5, 0.5);
 	return this.addChild(image);
+};
+
+StageBackground.prototype.onMouseDown = function() {
+	this.dragging = true;
+};
+
+StageBackground.prototype.onMouseUp = function() {
+	this.dragging = false;
+};
+
+StageBackground.prototype.onMouseMove = function(event) {
+	if (this.dragging) {
+		var newPosition = event.data.getLocalPosition(this);
+		this.image.position = newPosition.clone();
+	}
 };
 
 module.exports = StageBackground;
