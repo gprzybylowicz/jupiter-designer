@@ -1,5 +1,7 @@
 var Menu = require("./menu/Menu.js");
 var ParticleView = require("./ParticleView.js");
+var Stage = require("./stage/Stage.js");
+var service = require("../service");
 
 function MainView() {
 	this.renderer = this.createRenderer();
@@ -7,19 +9,11 @@ function MainView() {
 	this.stats = this.createStats();
 	this.particleView = this.createParticleView();
 	this.menu = this.createMenu();
-
-	this.stage.interactive = true;
-	this.stage.hitArea = new PIXI.Rectangle(0, 0, 600, 600);
-	this.stage.mousemove = this.stage.touchmove = function() {
-		console.log("ss");
-	};
-
 	this.draw();
-
 }
 
 MainView.prototype.createStage = function() {
-	return new PIXI.Container();
+	return new Stage(new PIXI.Rectangle(0, 0, 600, 600));
 };
 
 MainView.prototype.createRenderer = function() {
@@ -27,6 +21,10 @@ MainView.prototype.createRenderer = function() {
 	//todo: dynamic size of renderer
 	var renderer = new PIXI.WebGLRenderer(600, 600);
 	document.getElementById("stage").appendChild(renderer.view);
+
+	service.msg.on("background/colorChanged", function(value){
+		renderer.backgroundColor = value;
+	});
 	return renderer;
 };
 

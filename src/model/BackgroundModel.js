@@ -1,8 +1,7 @@
-function BackgroundModel(){
+function BackgroundModel() {
+	this.isLocked = true;
+	this.color = 0x00000;
 	this.texture = null;
-	this.color = 0x000000;
-	this.scale = 1;
 }
-
 
 module.exports = BackgroundModel;

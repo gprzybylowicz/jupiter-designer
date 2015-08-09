@@ -1,4 +1,5 @@
 var util = require("../util");
+var service = require("../service");
 
 function Marker(onDrag) {
 	PIXI.Container.call(this);
@@ -8,11 +9,14 @@ function Marker(onDrag) {
 	this.interactive = true;
 	this.buttonMode = true;
 	this.dragging = false;
-	this.createImage();
+	this.image = this.createImage();
 
 	this.mousedown = this.touchstart = this.onMouseDown;
 	this.mouseup = this.mouseupoutside = this.touchend = this.touchendoutside = this.onMouseUp;
 	this.mousemove = this.touchmove = this.onMouseMove;
+
+	service.msg.on("stage/mouseOver", this.onMouseOverStage);
+	service.msg.on("stage/mouseOut", this.onMouseOutStage);
 }
 
 util.inherit(Marker, PIXI.Container);
@@ -42,5 +46,12 @@ Marker.prototype.onMouseMove = function(event) {
 	}
 };
 
+Marker.prototype.onMouseOverStage = function() {
+	this.image.alpha = 0.5;
+};
+
+Marker.prototype.onMouseOutStage = function() {
+	this.image.alpha = 0.2;
+};
 
 module.exports = Marker;

@@ -7,9 +7,9 @@ var TexturesModel = require("./TexturesModel.js");
 
 module.exports = {
 	projectModel: new ProjectModel(),
-	backgroundModel: new BackgroundModel(),
 	particleModel: new ParticleModel(),
 	behaviourModel: new BehaviourModel(),
 	predefinedModel: new PredefinedModel(),
-	texturesModel: new TexturesModel()
+	texturesModel: new TexturesModel(),
+	backgroundModel: new BackgroundModel()
 };

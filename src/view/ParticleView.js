@@ -19,8 +19,6 @@ function ParticleView() {
 		renderer.position = position;
 	});
 	this.addChild(marker);
-
-	//marker.x = renderer.x = this.width/2;
 }
 
 inherit(ParticleView, PIXI.Container);
