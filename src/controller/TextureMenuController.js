@@ -20,10 +20,11 @@ TextureMenuController.prototype.onUploadTexture = function() {
 	reader.onload = function() {
 		texturesModel.setTexture(PIXI.Texture.fromImage(reader.result));
 		service.msg.emit("texture/changed");
+		document.getElementById("load-texture").value = null;
+
 	}.bind(this);
 
 	reader.readAsDataURL(document.getElementById("load-texture").files[0]);
 };
-
 
 module.exports = TextureMenuController;

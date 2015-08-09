@@ -20,7 +20,6 @@ StageBackground.prototype.onIsLockedChanged = function() {
 };
 
 StageBackground.prototype.onTextureChanged = function() {
-	console.log("onTextureChanged");
 	if (!backgroundModel.texture && this.image) {
 		this.removeChild(this.image);
 		this.image = null;

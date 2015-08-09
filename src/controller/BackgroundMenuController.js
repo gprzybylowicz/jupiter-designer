@@ -17,9 +17,12 @@ BackgroundMenuController.prototype.onChangeColor = function(value) {
 };
 
 BackgroundMenuController.prototype.onLoadTexture = function() {
+	console.log("onTextureChanged");
+
 	var reader = new FileReader();
 	reader.onload = function() {
 		backgroundModel.texture = PIXI.Texture.fromImage(reader.result);
+		document.getElementById("load-background").value = null;
 	}.bind(this);
 
 	reader.readAsDataURL(document.getElementById("load-background").files[0]);
