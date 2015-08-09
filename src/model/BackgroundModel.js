@@ -1,7 +1,14 @@
+var Model = require("./Model.js");
+var util = require("../util");
+
 function BackgroundModel() {
-	this.isLocked = true;
-	this.color = 0x00000;
-	this.texture = null;
+	Model.call(this);
+
+	this.property("color", 0x0000);
+	this.property("isLocked", true);
+	this.property("texture", null);
 }
+
+util.inherit(BackgroundModel, Model);
 
 module.exports = BackgroundModel;

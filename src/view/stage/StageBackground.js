@@ -6,8 +6,8 @@ function StageBackground() {
 	PIXI.Container.call(this);
 	util.bind(this);
 
-	service.msg.on("background/isLocked", this.onIsLockedChanged);
-	service.msg.on("background/textureChanged", this.onTextureChanged);
+	backgroundModel.on("isLocked/changed", this.onIsLockedChanged);
+	backgroundModel.on("texture/changed", this.onTextureChanged);
 
 	this.onIsLockedChanged();
 }

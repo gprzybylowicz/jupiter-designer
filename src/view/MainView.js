@@ -1,7 +1,7 @@
 var Menu = require("./menu/Menu.js");
 var ParticleView = require("./ParticleView.js");
 var Stage = require("./stage/Stage.js");
-var service = require("../service");
+var backgroundModel = require("../model").backgroundModel;
 
 function MainView() {
 	this.renderer = this.createRenderer();
@@ -22,7 +22,7 @@ MainView.prototype.createRenderer = function() {
 	var renderer = new PIXI.WebGLRenderer(600, 600);
 	document.getElementById("stage").appendChild(renderer.view);
 
-	service.msg.on("background/colorChanged", function(value){
+	backgroundModel.on("color/changed", function(value){
 		renderer.backgroundColor = value;
 	});
 	return renderer;

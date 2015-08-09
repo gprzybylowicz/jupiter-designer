@@ -1,6 +1,7 @@
 var SubMenu = require("./SubMenu.js");
 var util = require("../../util");
 var service = require("../../service");
+var backgroundModel = require("../../model").backgroundModel;
 
 function BackgroundMenu() {
 	SubMenu.call(this);
@@ -8,7 +9,7 @@ function BackgroundMenu() {
 
 	this.ui = {
 		rows: [
-			this.checkbox("Lock: ", {id: "lock_enable", value: 0}),
+			this.checkbox("Locked: ", {id: "lock_enable", value: backgroundModel.isLocked}),
 			this.button("Load image", {click: this.onLoadImage}),
 			this.button("Remove background", {click: this.onRemoveBackground}),
 			{view: "colorpicker", id: "background_color", label: "Color", name: "color", value: "#00000"}
@@ -37,7 +38,7 @@ BackgroundMenu.prototype.onLoadImage = function() {
 };
 
 BackgroundMenu.prototype.onRemoveBackground = function() {
-    
+	service.msg.emit("background/removeTexture");
 };
 
 module.exports = BackgroundMenu;

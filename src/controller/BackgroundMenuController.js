@@ -28,7 +28,6 @@ BackgroundMenuController.prototype.onLoadTexture = function() {
 	var reader = new FileReader();
 	reader.onload = function() {
 		backgroundModel.texture = PIXI.Texture.fromImage(reader.result);
-		service.msg.emit("background/textureChanged");
 	}.bind(this);
 
 	reader.readAsDataURL(document.getElementById("load-background").files[0]);
@@ -36,6 +35,5 @@ BackgroundMenuController.prototype.onLoadTexture = function() {
 
 BackgroundMenuController.prototype.onRemoveTexture = function() {
 	backgroundModel.texture = null;
-	service.msg.emit("background/textureChanged");
 };
 module.exports = BackgroundMenuController;
