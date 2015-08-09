@@ -9,22 +9,14 @@ function BackgroundMenuController() {
 }
 
 BackgroundMenuController.prototype.onLock = function(value) {
-	if (backgroundModel.isLocked !== value) {
-		backgroundModel.isLocked = value;
-		service.msg.emit("background/locked", value);
-	}
+	backgroundModel.isLocked = value;
 };
 
 BackgroundMenuController.prototype.onChangeColor = function(value) {
-	if (backgroundModel.color !== value) {
-		backgroundModel.color = value;
-		service.msg.emit("background/colorChanged", value);
-	}
+	backgroundModel.color = value;
 };
 
 BackgroundMenuController.prototype.onLoadTexture = function() {
-	console.log("onLoadTexture");
-
 	var reader = new FileReader();
 	reader.onload = function() {
 		backgroundModel.texture = PIXI.Texture.fromImage(reader.result);
