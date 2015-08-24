@@ -29,7 +29,7 @@ ProjectMenuController.prototype.onLoadProject = function() {
 ProjectMenuController.prototype.onSaveProject = function() {
 	var data = {};
 	data.config = projectModel.emitter.getParser().write();
-	data.texture = texturesModel.write();
+	data.texture = texturesModel.serialize();
 	data.background = backgroundModel.serialize();
 
 	file.saveAs("project.jup", data);

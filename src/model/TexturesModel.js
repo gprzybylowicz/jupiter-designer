@@ -51,7 +51,7 @@ TexturesModel.prototype.serialize = function() {
 
 TexturesModel.prototype.deserialize = function(data) {
 	if (data.name) {
-		this.setTextureByName(name);
+		this.setTextureByName(data.name);
 	}
 	else {
 		this.setTexture(PIXI.Texture.fromImage(data.url));

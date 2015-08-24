@@ -33,6 +33,7 @@ StageBackground.prototype.onTextureChanged = function() {
 	else {
 		this.image = this.image || this.createImage();
 		this.image.texture = backgroundModel.texture;
+		this.onPositionChanged();
 	}
 };
 
