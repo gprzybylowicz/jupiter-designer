@@ -45,11 +45,11 @@ TexturesModel.prototype.getTextureUrls = function() {
 	});
 };
 
-TexturesModel.prototype.write = function() {
+TexturesModel.prototype.serialize = function() {
 	return {name: this.currentTextureName, url: this.currentTexture.baseTexture.imageUrl};
 };
 
-TexturesModel.prototype.read = function(data) {
+TexturesModel.prototype.deserialize = function(data) {
 	if (data.name) {
 		this.setTextureByName(name);
 	}

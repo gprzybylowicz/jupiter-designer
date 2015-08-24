@@ -8,6 +8,7 @@ function StageBackground() {
 
 	backgroundModel.on("isLocked/changed", this.onIsLockedChanged);
 	backgroundModel.on("texture/changed", this.onTextureChanged);
+	backgroundModel.on("imagePosition/changed", this.onPositionChanged);
 
 	this.mousedown = this.touchstart = this.onMouseDown;
 	this.mouseup = this.mouseupoutside = this.touchend = this.touchendoutside = this.onMouseUp;
@@ -35,6 +36,13 @@ StageBackground.prototype.onTextureChanged = function() {
 	}
 };
 
+StageBackground.prototype.onPositionChanged = function() {
+	if (this.image) {
+		this.image.x = backgroundModel.imagePosition.x;
+		this.image.y = backgroundModel.imagePosition.y;
+	}
+};
+
 StageBackground.prototype.createImage = function() {
 	var image = new PIXI.Sprite(PIXI.Texture.EMPTY);
 	image.anchor.set(0.5, 0.5);
@@ -52,7 +60,7 @@ StageBackground.prototype.onMouseUp = function() {
 StageBackground.prototype.onMouseMove = function(event) {
 	if (this.dragging) {
 		var newPosition = event.data.getLocalPosition(this);
-		this.image.position = newPosition.clone();
+		backgroundModel.imagePosition = newPosition.clone();
 	}
 };
 

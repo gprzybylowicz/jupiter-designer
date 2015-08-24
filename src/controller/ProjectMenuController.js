@@ -4,6 +4,7 @@ var projectModel = require("../model").projectModel;
 var predefinedModel = require("../model").predefinedModel;
 var behaviourModel = require("../model").behaviourModel;
 var texturesModel = require("../model").texturesModel;
+var backgroundModel = require("../model").backgroundModel;
 
 function ProjectMenuController() {
 	service.msg.on("project/save", this.onSaveProject, this);
@@ -13,14 +14,23 @@ function ProjectMenuController() {
 	service.msg.on("project/loadPredefined", this.onLoadPredefined, this);
 }
 
-ProjectMenuController.prototype.saveProject = function() {
+ProjectMenuController.prototype.onLoadProject = function() {
+	var reader = new FileReader();
+	reader.onload = function() {
+		var data = JSON.parse(reader.result);
+		this.loadConfig(data.config);
+		texturesModel.deserialize(data.texture);
+		backgroundModel.deserialize(data.background);
+	}.bind(this);
 
+	reader.readAsText(document.getElementById("load-project").files[0]);
 };
 
 ProjectMenuController.prototype.onSaveProject = function() {
 	var data = {};
 	data.config = projectModel.emitter.getParser().write();
 	data.texture = texturesModel.write();
+	data.background = backgroundModel.serialize();
 
 	file.saveAs("project.jup", data);
 };

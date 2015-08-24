@@ -9,7 +9,7 @@ function ProjectMenu() {
 	this.ui = {
 		rows: [
 			{view: "button", value: "Save Project", width: 200, click: this.onSaveProject},
-			{view: "button", value: "Load Project", width: 200},
+			{view: "button", value: "Load Project", width: 200, click: this.onLoadProject},
 			{view: "button", value: "Export config", width: 200, click: this.onExportConfig},
 			{view: "button", value: "Load config", width: 200, click: this.onLoadConfig},
 			{view: "button", value: "Load predefined", width: 200, click: this.onLoadPredefined},
@@ -22,10 +22,17 @@ function ProjectMenu() {
 		service.msg.emit("project/loadConfig");
 	};
 
+	document.getElementById("load-project").onchange = function() {
+		service.msg.emit("project/load");
+	};
 }
 
 ProjectMenu.prototype.onLoadConfig = function() {
 	document.getElementById("load-config").click();
+};
+
+ProjectMenu.prototype.onLoadProject = function() {
+	document.getElementById("load-project").click();
 };
 
 ProjectMenu.prototype.onSaveProject = function() {
