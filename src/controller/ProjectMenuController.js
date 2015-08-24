@@ -3,8 +3,11 @@ var service = require("../service");
 var projectModel = require("../model").projectModel;
 var predefinedModel = require("../model").predefinedModel;
 var behaviourModel = require("../model").behaviourModel;
+var texturesModel = require("../model").texturesModel;
 
 function ProjectMenuController() {
+	service.msg.on("project/save", this.onSaveProject, this);
+	service.msg.on("project/load", this.onLoadProject, this);
 	service.msg.on("project/exportConfig", this.onExportConfig, this);
 	service.msg.on("project/loadConfig", this.onLoadConfig, this);
 	service.msg.on("project/loadPredefined", this.onLoadPredefined, this);
@@ -14,8 +17,12 @@ ProjectMenuController.prototype.saveProject = function() {
 
 };
 
-ProjectMenuController.prototype.loadProject = function() {
+ProjectMenuController.prototype.onSaveProject = function() {
+	var data = {};
+	data.config = projectModel.emitter.getParser().write();
+	data.texture = texturesModel.write();
 
+	file.saveAs("project.jup", data);
 };
 
 ProjectMenuController.prototype.onExportConfig = function() {

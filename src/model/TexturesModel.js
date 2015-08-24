@@ -8,6 +8,7 @@ var PREDEFINED_TEXTURES = [
 
 function TexturesModel() {
 	this.textures = PREDEFINED_TEXTURES.concat();
+	this.currentTextureName = null;
 }
 
 TexturesModel.prototype.setDefaultTexture = function() {
@@ -21,12 +22,15 @@ TexturesModel.prototype.setTextureByName = function(name) {
 			url = this.textures[i].url;
 		}
 	}
+	this.currentTextureName = name;
 	this.currentTexture = PIXI.Texture.fromFrame(url);
 };
 
 TexturesModel.prototype.setTexture = function(texture) {
+	this.currentTextureName = null;
 	this.currentTexture = texture;
 };
+
 TexturesModel.prototype.getCurrentTexture = function() {
 	return this.currentTexture;
 };
@@ -39,6 +43,19 @@ TexturesModel.prototype.getTextureUrls = function() {
 	return this.getTextures().map(function(texture) {
 		return texture.url;
 	});
+};
+
+TexturesModel.prototype.write = function() {
+	return {name: this.currentTextureName, url: this.currentTexture.baseTexture.imageUrl};
+};
+
+TexturesModel.prototype.read = function(data) {
+	if (data.name) {
+		this.setTextureByName(name);
+	}
+	else {
+		this.setTexture(PIXI.Texture.fromImage(data.url));
+	}
 };
 
 module.exports = TexturesModel;

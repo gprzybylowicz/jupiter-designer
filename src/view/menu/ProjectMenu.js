@@ -8,7 +8,7 @@ function ProjectMenu() {
 
 	this.ui = {
 		rows: [
-			{view: "button", value: "Save Project", width: 200},
+			{view: "button", value: "Save Project", width: 200, click: this.onSaveProject},
 			{view: "button", value: "Load Project", width: 200},
 			{view: "button", value: "Export config", width: 200, click: this.onExportConfig},
 			{view: "button", value: "Load config", width: 200, click: this.onLoadConfig},
@@ -26,6 +26,10 @@ function ProjectMenu() {
 
 ProjectMenu.prototype.onLoadConfig = function() {
 	document.getElementById("load-config").click();
+};
+
+ProjectMenu.prototype.onSaveProject = function() {
+	service.msg.emit("project/save");
 };
 
 ProjectMenu.prototype.onExportConfig = function() {
