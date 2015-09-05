@@ -13,7 +13,7 @@ function ParticleRenderer(emitter, config) {
 util.inherit(ParticleRenderer, PIXIRenderer);
 
 ParticleRenderer.prototype.onTextureChanged = function() {
-	this.config.texture = texturesModel.getCurrentTexture();
+	this.texture = texturesModel.getCurrentTexture();
 
 	for (var i = 0; i < this.unusedSprites.length; ++i) {
 		this.unusedSprites[i].texture = texturesModel.getCurrentTexture();

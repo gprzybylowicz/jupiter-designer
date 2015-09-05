@@ -1,8 +1,8 @@
-function PIXIRenderer(emitter, config) {
+function PIXIRenderer(emitter, texture) {
 	PIXI.Container.call(this);
 
 	this.setEmitter(emitter);
-	this.config = config;
+	this.texture = texture;
 	this.sprites = {};
 
 	this.unusedSprites = [];
@@ -29,7 +29,6 @@ PIXIRenderer.prototype.update = function(dt) {
 	this.emitter.update(dt / 100);
 };
 
-
 PIXIRenderer.prototype.setEmitter = function(emitter) {
 	this.emitter = emitter;
 	this.emitter.setObserver(this);
@@ -46,7 +45,7 @@ PIXIRenderer.prototype.getOrCreateSprite = function() {
 		return this.unusedSprites.pop();
 	}
 
-	var sprite = new PIXI.Sprite(this.config.texture);
+	var sprite = new PIXI.Sprite(this.texture);
 	sprite.anchor.set(0.5, 0.5);
 	return this.addChild(sprite);
 };
@@ -70,6 +69,5 @@ PIXIRenderer.prototype.onRemove = function(particle) {
 	sprite.visible = false;
 	this.unusedSprites.push(sprite);
 };
-
 
 module.exports = PIXIRenderer;

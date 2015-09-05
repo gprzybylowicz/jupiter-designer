@@ -1,26 +1,25 @@
-var inherit = require("../util").inherit;
+var util = require("../util");
 var ParticleRenderer = require("./ParticleRenderer.js");
-var Marker = require("./Marker.js");
 var projectModel = require("../model").projectModel;
 var texturesModel = require("../model").texturesModel;
 
 function ParticleView() {
 	PIXI.Container.call(this);
+	util.bind(this);
 
-	var config = {
-		texture: texturesModel.getCurrentTexture()
-	};
-
-	var renderer = new ParticleRenderer(projectModel.emitter, config);
+	var renderer = new ParticleRenderer(projectModel.emitter, texturesModel.getCurrentTexture());
 	renderer.play();
-	this.addChild(renderer);
+	this.renderer = this.addChild(renderer);
 
-	var marker = new Marker(function(position) {
-		renderer.position = position;
-	});
-	this.addChild(marker);
+	projectModel.on("markerPosition/changed", this.refreshRendererPosition);
+	this.refreshRendererPosition();
 }
 
-inherit(ParticleView, PIXI.Container);
+util.inherit(ParticleView, PIXI.Container);
+
+ParticleView.prototype.refreshRendererPosition = function() {
+	this.renderer.position = projectModel.markerPosition;
+};
 
 module.exports = ParticleView;
+

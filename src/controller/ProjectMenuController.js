@@ -12,13 +12,16 @@ function ProjectMenuController() {
 	service.msg.on("project/exportConfig", this.onExportConfig, this);
 	service.msg.on("project/loadConfig", this.onLoadConfig, this);
 	service.msg.on("project/loadPredefined", this.onLoadPredefined, this);
+
+	projectModel.on("emitterConfig/changed", this.refreshBehaviours);
 }
 
 ProjectMenuController.prototype.onLoadProject = function() {
 	var reader = new FileReader();
 	reader.onload = function() {
 		var data = JSON.parse(reader.result);
-		this.loadConfig(data.config);
+
+		projectModel.deserialize(data.project);
 		texturesModel.deserialize(data.texture);
 		backgroundModel.deserialize(data.background);
 	}.bind(this);
@@ -28,7 +31,7 @@ ProjectMenuController.prototype.onLoadProject = function() {
 
 ProjectMenuController.prototype.onSaveProject = function() {
 	var data = {};
-	data.config = projectModel.emitter.getParser().write();
+	data.project = projectModel.serialize();
 	data.texture = texturesModel.serialize();
 	data.background = backgroundModel.serialize();
 
@@ -42,8 +45,7 @@ ProjectMenuController.prototype.onExportConfig = function() {
 ProjectMenuController.prototype.onLoadConfig = function() {
 	var reader = new FileReader();
 	reader.onload = function() {
-		var data = JSON.parse(reader.result);
-		this.loadConfig(data);
+		projectModel.setEmitterConfig(JSON.parse(reader.result));
 	}.bind(this);
 
 	reader.readAsText(document.getElementById("load-config").files[0]);
@@ -54,12 +56,10 @@ ProjectMenuController.prototype.reset = function() {
 };
 
 ProjectMenuController.prototype.onLoadPredefined = function(name) {
-	this.loadConfig(predefinedModel.getByName(name));
+	projectModel.setEmitterConfig(predefinedModel.getByName(name));
 };
 
-ProjectMenuController.prototype.loadConfig = function(config) {
-	projectModel.emitter.getParser().read(config);
-
+ProjectMenuController.prototype.refreshBehaviours = function() {
 	var behaviours = projectModel.emitter.behaviours.getAll();
 	for (var i = 0; i < behaviours.length; i++) {
 		behaviourModel.addBehaviour(behaviours[i]);
