@@ -18,6 +18,7 @@ function ParticleView() {
 util.inherit(ParticleView, PIXI.Container);
 
 ParticleView.prototype.refreshRendererPosition = function() {
+	console.log(projectModel.emitter);
 	this.renderer.position = projectModel.markerPosition;
 };
 

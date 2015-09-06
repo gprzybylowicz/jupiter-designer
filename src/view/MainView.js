@@ -2,6 +2,7 @@ var Menu = require("./menu/Menu.js");
 var ParticleView = require("./ParticleView.js");
 var Stage = require("./stage/Stage.js");
 var backgroundModel = require("../model").backgroundModel;
+var service = require("../service");
 
 function MainView() {
 	this.renderer = this.createRenderer();
@@ -9,6 +10,8 @@ function MainView() {
 	this.stats = this.createStats();
 	this.particleView = this.createParticleView();
 	this.menu = this.createMenu();
+
+	service.msg.emit("project/loadPredefined", "default");
 	this.draw();
 }
 
@@ -22,7 +25,7 @@ MainView.prototype.createRenderer = function() {
 	var renderer = new PIXI.WebGLRenderer(600, 600);
 	document.getElementById("stage").appendChild(renderer.view);
 
-	backgroundModel.on("color/changed", function(value){
+	backgroundModel.on("color/changed", function(value) {
 		renderer.backgroundColor = value;
 	});
 	return renderer;

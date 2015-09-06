@@ -23,6 +23,10 @@ util.inherit(LifeMenu, SubMenu);
 LifeMenu.prototype.onMenuCreated = function() {
 	this.bind("life_slider_time", "maxLifeTime");
 	this.bind("life_slider_variance", "timeVariance");
+
+	service.msg.emit("behaviour/setEnable", true, this.getBehaviour());
+
+
 };
 
 LifeMenu.prototype.getBehaviour = function() {

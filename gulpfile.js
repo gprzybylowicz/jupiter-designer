@@ -80,7 +80,7 @@ gulp.task("test-watch", function() {
 
 gulp.task('connect', function() {
 
-	watch(["./src/**/*.js"], function() {
+	watch(["./src/**/*.js", "./assets/**/*"], function() {
 		gulp.start("browserify:designer");
 	});
 	connect.server({

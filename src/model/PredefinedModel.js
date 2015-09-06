@@ -1,4 +1,5 @@
 var CONFIG = {
+	default: require("../../assets/config/default.json"),
 	snow: require("../../assets/config/snow.json"),
 	snow2: require("../../assets/config/snow2.json"),
 	test: require("../../assets/config/test.json")

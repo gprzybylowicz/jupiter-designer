@@ -52,7 +52,7 @@ ProjectMenuController.prototype.onLoadConfig = function() {
 };
 
 ProjectMenuController.prototype.reset = function() {
-
+	this.onLoadPredefined("default");
 };
 
 ProjectMenuController.prototype.onLoadPredefined = function(name) {

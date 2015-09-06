@@ -11,7 +11,7 @@ function EmitterMenu() {
 		rows: [
 			this.counter("Emit per sec:", {
 				id: "emit_per_second",
-				step: 0.1, value: 1, min: 0, max: 100, align: "center", format: webix.i18n.numberFormat
+				step: 0.1, value: 20, min: 0, max: 200, align: "center", format: webix.i18n.numberFormat
 			})
 		]
 

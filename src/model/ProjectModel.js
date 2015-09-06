@@ -36,6 +36,8 @@ ProjectModel.prototype.deserialize = function(data) {
 };
 
 ProjectModel.prototype.setEmitterConfig = function(config) {
+
+	console.log(config);
 	this.emitter.getParser().read(config);
 	this.emit("emitterConfig/changed");
 };
