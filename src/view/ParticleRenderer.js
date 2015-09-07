@@ -1,16 +1,15 @@
 var util = require("../util");
 var service = require("../service");
 var texturesModel = require("../model").texturesModel;
-var PIXIRenderer = require("../PIXIRenderer.js");
 
 function ParticleRenderer(emitter, config) {
-	PIXIRenderer.call(this, emitter, config);
+	jupiter.Renderer.call(this, emitter, config);
 	util.bind(this);
 
 	service.msg.on("texture/changed", this.onTextureChanged);
 }
 
-util.inherit(ParticleRenderer, PIXIRenderer);
+util.inherit(ParticleRenderer, jupiter.Renderer);
 
 ParticleRenderer.prototype.onTextureChanged = function() {
 	this.texture = texturesModel.getCurrentTexture();
