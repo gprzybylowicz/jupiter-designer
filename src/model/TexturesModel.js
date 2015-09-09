@@ -2,11 +2,12 @@ var Model = require("./Model.js");
 var util = require("../util");
 
 var PREDEFINED_TEXTURES = [
-	{name: "circle", url: "assets/circle.png"},
-	{name: "cloud", url: "assets/cloud.png"},
-	{name: "flare", url: "assets/flare.png"},
 	{name: "flare_blue", url: "assets/flare_blue.png"},
-	{name: "sparkle", url: "assets/sparkle.png"}
+	{name: "cloud", url: "assets/cloud.png"},
+	{name: "cloud2", url: "assets/cloud2.png"},
+	{name: "flare", url: "assets/flare.png"},
+	{name: "sparkle", url: "assets/sparkle.png"},
+	{name: "circle", url: "assets/circle.png"}
 ];
 
 function TexturesModel() {

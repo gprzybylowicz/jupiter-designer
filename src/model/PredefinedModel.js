@@ -21,7 +21,8 @@ PredefinedModel.prototype.getNames = function() {
 PredefinedModel.prototype.getConfigUrls = function() {
 	return [
 		"assets/config/default.jup",
-		"assets/config/firework.jup"
+		"assets/config/firework.jup",
+		"assets/config/green_chaos.jup"
 	];
 };
 
