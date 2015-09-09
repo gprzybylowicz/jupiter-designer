@@ -6,7 +6,7 @@ function ParticleRenderer(emitter, config) {
 	jupiter.Renderer.call(this, emitter, config);
 	util.bind(this);
 
-	service.msg.on("texture/changed", this.onTextureChanged);
+	texturesModel.on("currentTexture/changed", this.onTextureChanged);
 }
 
 util.inherit(ParticleRenderer, jupiter.Renderer);

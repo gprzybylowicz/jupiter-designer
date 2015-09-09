@@ -597,6 +597,8 @@ ProjectMenuController.prototype.onLoadProject = function() {
 		projectModel.deserialize(data.project);
 		texturesModel.deserialize(data.texture);
 		backgroundModel.deserialize(data.background);
+
+		service.msg.emit("project/loaded");
 	}.bind(this);
 
 	reader.readAsText(document.getElementById("load-project").files[0]);
@@ -656,14 +658,12 @@ TextureMenuController.prototype.exportParticleTexture = function() {
 
 TextureMenuController.prototype.onTextureChange = function(name) {
 	texturesModel.setTextureByName(name);
-	service.msg.emit("texture/changed");
 };
 
 TextureMenuController.prototype.onUploadTexture = function() {
 	var reader = new FileReader();
 	reader.onload = function() {
 		texturesModel.setTexture(PIXI.Texture.fromImage(reader.result));
-		service.msg.emit("texture/changed");
 		document.getElementById("load-texture").value = null;
 
 	}.bind(this);
@@ -823,8 +823,9 @@ var util = require("../util");
 function ProjectModel() {
 	Model.call(this);
 
+	this.stageSize = new PIXI.Point(600, 600);
 	this.emitter = new jupiter.Emitter();
-	this.property("markerPosition", new PIXI.Point(0, 0));
+	this.property("markerPosition", new PIXI.Point(0.5, 0.5));
 }
 
 util.inherit(ProjectModel, Model);
@@ -844,25 +845,34 @@ ProjectModel.prototype.hasActiveBehaviour = function(behaviour) {
 ProjectModel.prototype.serialize = function() {
 	var data = {};
 	data.emitterConfig = this.emitter.getParser().write();
-	data.markerPosition = {x: this.imagePosition.x, y: this.imagePosition.y};
+	data.markerPosition = {x: this.markerPosition.x, y: this.markerPosition.y};
 
 	return data;
 };
 
 ProjectModel.prototype.deserialize = function(data) {
-	this.imagePosition = new PIXI.Point(data.imagePosition.x, data.imagePosition.y);
+	this.markerPosition = new PIXI.Point(data.markerPosition.x, data.markerPosition.y);
 	this.setEmitterConfig(data.emitterConfig);
 };
 
 ProjectModel.prototype.setEmitterConfig = function(config) {
-
-	console.log(config);
 	this.emitter.getParser().read(config);
 	this.emit("emitterConfig/changed");
 };
 
+Object.defineProperty(ProjectModel.prototype, "markerPositionInStageCoordinates", {
+	get: function() {
+		return new PIXI.Point(this.markerPosition.x * this.stageSize.x, this.markerPosition.y * this.stageSize.y);
+	},
+	set: function(value) {
+		this.markerPosition = new PIXI.Point(value.x / this.stageSize.x, value.y / this.stageSize.y);
+	}
+});
 module.exports = ProjectModel;
 },{"../util":23,"./Model.js":14}],18:[function(require,module,exports){
+var Model = require("./Model.js");
+var util = require("../util");
+
 var PREDEFINED_TEXTURES = [
 	{name: "circle", url: "assets/circle.png"},
 	{name: "cloud", url: "assets/cloud.png"},
@@ -872,9 +882,14 @@ var PREDEFINED_TEXTURES = [
 ];
 
 function TexturesModel() {
+	Model.call(this);
+
 	this.textures = PREDEFINED_TEXTURES.concat();
 	this.currentTextureName = null;
+	this.property("currentTexture", null);
 }
+
+util.inherit(TexturesModel, Model);
 
 TexturesModel.prototype.setDefaultTexture = function() {
 	this.setTextureByName("circle");
@@ -924,7 +939,7 @@ TexturesModel.prototype.deserialize = function(data) {
 };
 
 module.exports = TexturesModel;
-},{}],19:[function(require,module,exports){
+},{"../util":23,"./Model.js":14}],19:[function(require,module,exports){
 var ProjectModel = require("./ProjectModel.js");
 var BackgroundModel = require("./BackgroundModel.js");
 var ParticleModel = require("./ParticleModel.js");
@@ -1001,6 +1016,7 @@ function MainView() {
 }
 
 MainView.prototype.createStage = function() {
+	//todo: size from 
 	return new Stage(new PIXI.Rectangle(0, 0, 600, 600));
 };
 
@@ -1085,14 +1101,8 @@ Marker.prototype.onMouseUp = function() {
 Marker.prototype.onMouseMove = function(event) {
 	if (this.dragging) {
 		var newPosition = event.data.getLocalPosition(this.parent);
-		this.setPosition(newPosition);
+		this.onDrag(newPosition);
 	}
-};
-
-Marker.prototype.setPosition = function(value) {
-	this.x = value.x;
-	this.y = value.y;
-	this.onDrag(value);
 };
 
 Marker.prototype.onMouseOverStage = function() {
@@ -1113,7 +1123,7 @@ function ParticleRenderer(emitter, config) {
 	jupiter.Renderer.call(this, emitter, config);
 	util.bind(this);
 
-	service.msg.on("texture/changed", this.onTextureChanged);
+	texturesModel.on("currentTexture/changed", this.onTextureChanged);
 }
 
 util.inherit(ParticleRenderer, jupiter.Renderer);
@@ -1138,6 +1148,7 @@ ParticleRenderer.prototype.onEmitComplete = function() {
 module.exports = ParticleRenderer;
 },{"../model":19,"../service":21,"../util":23}],28:[function(require,module,exports){
 var util = require("../util");
+var service = require("../service");
 var ParticleRenderer = require("./ParticleRenderer.js");
 var projectModel = require("../model").projectModel;
 var texturesModel = require("../model").texturesModel;
@@ -1151,20 +1162,25 @@ function ParticleView() {
 	this.renderer = this.addChild(renderer);
 
 	projectModel.on("markerPosition/changed", this.refreshRendererPosition);
+	service.msg.on("project/loaded", this.onProjectLoaded);
+
 	this.refreshRendererPosition();
 }
 
 util.inherit(ParticleView, PIXI.Container);
 
 ParticleView.prototype.refreshRendererPosition = function() {
-	console.log(projectModel.emitter);
-	this.renderer.position = projectModel.markerPosition;
+	this.renderer.position = projectModel.markerPositionInStageCoordinates;
+};
+
+ParticleView.prototype.onProjectLoaded = function() {
+	this.renderer.reset();
 };
 
 module.exports = ParticleView;
 
 
-},{"../model":19,"../util":23,"./ParticleRenderer.js":27}],29:[function(require,module,exports){
+},{"../model":19,"../service":21,"../util":23,"./ParticleRenderer.js":27}],29:[function(require,module,exports){
 module.exports = {
 	slider: require("./slider.js")
 };
@@ -2002,6 +2018,7 @@ function Stage(rect) {
 	PIXI.Container.call(this);
 	util.bind(this);
 
+	this.rect = rect;
 	this.hitArea = rect;
 	this.interactive = true;
 	this.hasFocus = false;
@@ -2018,15 +2035,21 @@ function Stage(rect) {
 	background.x = rect.width / 2;
 	background.y = rect.height / 2;
 
-	var marker = new Marker(function(position) {
-		projectModel.markerPosition = position.clone();
-	});
-	this.addChild(marker);
+	this.marker = this.addChild(new Marker(this.onMarkerDrag));
+	projectModel.on("markerPosition/changed", this.onMarkerPositionChanged);
 
-	marker.setPosition(new PIXI.Point(rect.width / 2, rect.height / 2));
+	this.onMarkerPositionChanged();
 }
 
 util.inherit(Stage, PIXI.Container);
+
+Stage.prototype.onMarkerDrag = function(position) {
+	projectModel.markerPositionInStageCoordinates = position;
+};
+
+Stage.prototype.onMarkerPositionChanged = function() {
+	this.marker.position = projectModel.markerPositionInStageCoordinates;
+};
 
 module.exports = Stage;
 },{"../../model":19,"../../service":21,"../../util":23,"../Marker.js":26,"./StageBackground.js":44}],44:[function(require,module,exports){
@@ -2052,7 +2075,6 @@ function StageBackground() {
 util.inherit(StageBackground, PIXI.Container);
 
 StageBackground.prototype.onIsLockedChanged = function() {
-	console.log("locked", backgroundModel.isLocked);
 	this.interactive = !backgroundModel.isLocked;
 	this.buttonMode = !backgroundModel.isLocked;
 };

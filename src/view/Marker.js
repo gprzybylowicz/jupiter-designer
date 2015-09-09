@@ -40,14 +40,8 @@ Marker.prototype.onMouseUp = function() {
 Marker.prototype.onMouseMove = function(event) {
 	if (this.dragging) {
 		var newPosition = event.data.getLocalPosition(this.parent);
-		this.setPosition(newPosition);
+		this.onDrag(newPosition);
 	}
-};
-
-Marker.prototype.setPosition = function(value) {
-	this.x = value.x;
-	this.y = value.y;
-	this.onDrag(value);
 };
 
 Marker.prototype.onMouseOverStage = function() {

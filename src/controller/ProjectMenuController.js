@@ -24,6 +24,8 @@ ProjectMenuController.prototype.onLoadProject = function() {
 		projectModel.deserialize(data.project);
 		texturesModel.deserialize(data.texture);
 		backgroundModel.deserialize(data.background);
+
+		service.msg.emit("project/loaded");
 	}.bind(this);
 
 	reader.readAsText(document.getElementById("load-project").files[0]);

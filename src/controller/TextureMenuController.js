@@ -12,14 +12,12 @@ TextureMenuController.prototype.exportParticleTexture = function() {
 
 TextureMenuController.prototype.onTextureChange = function(name) {
 	texturesModel.setTextureByName(name);
-	service.msg.emit("texture/changed");
 };
 
 TextureMenuController.prototype.onUploadTexture = function() {
 	var reader = new FileReader();
 	reader.onload = function() {
 		texturesModel.setTexture(PIXI.Texture.fromImage(reader.result));
-		service.msg.emit("texture/changed");
 		document.getElementById("load-texture").value = null;
 
 	}.bind(this);

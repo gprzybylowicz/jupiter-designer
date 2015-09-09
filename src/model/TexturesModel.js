@@ -1,3 +1,6 @@
+var Model = require("./Model.js");
+var util = require("../util");
+
 var PREDEFINED_TEXTURES = [
 	{name: "circle", url: "assets/circle.png"},
 	{name: "cloud", url: "assets/cloud.png"},
@@ -7,9 +10,14 @@ var PREDEFINED_TEXTURES = [
 ];
 
 function TexturesModel() {
+	Model.call(this);
+
 	this.textures = PREDEFINED_TEXTURES.concat();
 	this.currentTextureName = null;
+	this.property("currentTexture", null);
 }
+
+util.inherit(TexturesModel, Model);
 
 TexturesModel.prototype.setDefaultTexture = function() {
 	this.setTextureByName("circle");

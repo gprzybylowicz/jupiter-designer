@@ -8,6 +8,7 @@ function Stage(rect) {
 	PIXI.Container.call(this);
 	util.bind(this);
 
+	this.rect = rect;
 	this.hitArea = rect;
 	this.interactive = true;
 	this.hasFocus = false;
@@ -24,14 +25,20 @@ function Stage(rect) {
 	background.x = rect.width / 2;
 	background.y = rect.height / 2;
 
-	var marker = new Marker(function(position) {
-		projectModel.markerPosition = position.clone();
-	});
-	this.addChild(marker);
+	this.marker = this.addChild(new Marker(this.onMarkerDrag));
+	projectModel.on("markerPosition/changed", this.onMarkerPositionChanged);
 
-	marker.setPosition(new PIXI.Point(rect.width / 2, rect.height / 2));
+	this.onMarkerPositionChanged();
 }
 
 util.inherit(Stage, PIXI.Container);
+
+Stage.prototype.onMarkerDrag = function(position) {
+	projectModel.markerPositionInStageCoordinates = position;
+};
+
+Stage.prototype.onMarkerPositionChanged = function() {
+	this.marker.position = projectModel.markerPositionInStageCoordinates;
+};
 
 module.exports = Stage;

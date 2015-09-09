@@ -16,6 +16,7 @@ function MainView() {
 }
 
 MainView.prototype.createStage = function() {
+	//todo: size from 
 	return new Stage(new PIXI.Rectangle(0, 0, 600, 600));
 };
 
