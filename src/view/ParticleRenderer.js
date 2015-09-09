@@ -23,4 +23,9 @@ ParticleRenderer.prototype.onTextureChanged = function() {
 	}
 };
 
+ParticleRenderer.prototype.onEmitComplete = function() {
+	jupiter.Renderer.prototype.onEmitComplete.call(this);
+	this.play();
+};
+
 module.exports = ParticleRenderer;
