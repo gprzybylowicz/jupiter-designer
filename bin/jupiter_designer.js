@@ -1,19 +1,28 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 var MainView = require("./view").MainView;
 var texturesModel = require("./model").texturesModel;
+var predefinedModel = require("./model").predefinedModel;
 
 window.addEventListener("load", function() {
 
+	//todo: extract
+	PIXI.loader.use(function(resource, next) {
+		if ((/\.(jup)$/i).test(resource.name)) {
+			var start = resource.name.lastIndexOf("/") + 1;
+			var end = resource.name.lastIndexOf(".");
+			predefinedModel.add(resource.name.substring(start, end), JSON.parse(resource.data));
+		}
+
+		next();
+	});
 	PIXI.loader.add("assets/spritesheet.json");
 	PIXI.loader.add(texturesModel.getTextureUrls());
+	PIXI.loader.add(predefinedModel.getConfigUrls());
 	PIXI.loader.once("complete", onLoaded);
 	PIXI.loader.load();
 
 	function onLoaded() {
 		texturesModel.setDefaultTexture();
-		var emitter = new jupiter.Emitter();
-
-		console.log(jupiter);
 		var mainView = new MainView();
 	}
 });
@@ -21,220 +30,7 @@ window.addEventListener("load", function() {
 
 
 
-},{"./model":19,"./view":31}],2:[function(require,module,exports){
-module.exports={
-  "configName": "default",
-  "behaviours": [
-    {
-      "priority": 10000,
-      "maxLifeTime": 4,
-      "timeVariance": 1,
-      "name": "LifeBehaviour"
-    },
-    {
-      "priority": 100,
-      "position": {
-        "x": 0,
-        "y": 0
-      },
-      "positionVariance": {
-        "x": 5,
-        "y": 5
-      },
-      "velocity": {
-        "x": 0,
-        "y": -70
-      },
-      "velocityVariance": {
-        "x": 0,
-        "y": 20
-      },
-      "acceleration": {
-        "x": 0,
-        "y": -10
-      },
-      "accelerationVariance": {
-        "x": 0,
-        "y": 0
-      },
-      "name": "PositionBehaviour"
-    },
-    {
-      "priority": 0,
-      "allowNegativeValues": false,
-      "sizeStart": {
-        "x": 1,
-        "y": 1
-      },
-      "sizeEnd": {
-        "x": 0,
-        "y": 0
-      },
-      "startVariance": 0,
-      "endVariance": 0,
-      "name": "SizeBehaviour"
-    }
-  ],
-  "emitController": {
-    "_maxParticles": 0,
-    "_maxLife": 1,
-    "_emitPerSecond": 20,
-    "_frames": 0
-  }
-}
-},{}],3:[function(require,module,exports){
-module.exports={
-  "configName": "snow",
-
-  "behaviours": [
-    {
-      "priority": 10000,
-      "maxLifeTime": 1.4,
-      "timeVariance": 0.8823022574530415,
-      "name": "LifeBehaviour"
-    },
-    {
-      "priority": 100,
-      "position": {
-        "x": 338.02690582959633,
-        "y": 0
-      },
-      "positionVariance": {
-        "x": 142.8699551569507,
-        "y": 0
-      },
-      "velocity": {
-        "x": 0,
-        "y": 119.91031390134538
-      },
-      "velocityVariance": {
-        "x": 142.8699551569507,
-        "y": 0
-      },
-      "acceleration": {
-        "x": 0,
-        "y": 28.0717488789237
-      },
-      "accelerationVariance": {
-        "x": 96.95067264573981,
-        "y": 0
-      },
-      "name": "PositionBehaviour"
-    },
-    {
-      "priority": 0,
-      "allowNegativeValues": false,
-      "sizeStart": {
-        "x": 1,
-        "y": 1
-      },
-      "sizeEnd": {
-        "x": 0,
-        "y": 0
-      },
-      "startVariance": 0,
-      "endVariance": 0,
-      "name": "SizeBehaviour"
-    }
-  ],
-  "emitController": {
-    "_maxParticles": 0,
-    "_maxLife": 1,
-    "_emitPerSecond": 66.17266930897812,
-    "_frames": 0
-  }
-}
-},{}],4:[function(require,module,exports){
-module.exports={
-  "behaviours": [
-    {
-      "priority": 10000,
-      "maxLifeTime": 1.4,
-      "timeVariance": 2.5,
-      "name": "LifeBehaviour"
-    },
-    {
-      "priority": 100,
-      "position": {
-        "x": 338.02690582959633,
-        "y": 0
-      },
-      "positionVariance": {
-        "x": 142.8699551569507,
-        "y": 0
-      },
-      "velocity": {
-        "x": 0,
-        "y": 119.91031390134538
-      },
-      "velocityVariance": {
-        "x": 142.8699551569507,
-        "y": 0
-      },
-      "acceleration": {
-        "x": 0,
-        "y": 28.0717488789237
-      },
-      "accelerationVariance": {
-        "x": 96.95067264573981,
-        "y": 0
-      },
-      "name": "PositionBehaviour"
-    },
-    {
-      "priority": 0,
-      "allowNegativeValues": false,
-      "sizeStart": {
-        "x": 1,
-        "y": 1
-      },
-      "sizeEnd": {
-        "x": 0,
-        "y": 0
-      },
-      "startVariance": 0,
-      "endVariance": 0,
-      "name": "SizeBehaviour"
-    },
-    {
-      "priority": 0,
-      "start": {
-        "_r": 221,
-        "_g": 0,
-        "_b": 221,
-        "_alpha": 1
-      },
-      "end": {
-        "_r": 110,
-        "_g": 255,
-        "_b": 110,
-        "_alpha": 1
-      },
-      "startVariance": {
-        "_r": 0,
-        "_g": 0,
-        "_b": 0,
-        "_alpha": 1
-      },
-      "endVariance": {
-        "_r": 0,
-        "_g": 0,
-        "_b": 0,
-        "_alpha": 1
-      },
-      "name": "ColorBehaviour"
-    }
-  ],
-  "emitController": {
-    "_maxParticles": 0,
-    "_maxLife": 1,
-    "_emitPerSecond": 66.17266930897812,
-    "_frames": 0
-  }
-}
-},{}],5:[function(require,module,exports){
-module.exports={"behaviours":[{"priority":10000,"maxLifeTime":1.4,"timeVariance":2.5,"name":"LifeBehaviour"},{"priority":100,"position":{"x":338.02690582959633,"y":0},"positionVariance":{"x":142.8699551569507,"y":0},"velocity":{"x":0,"y":119.91031390134538},"velocityVariance":{"x":142.8699551569507,"y":0},"acceleration":{"x":0,"y":28.0717488789237},"accelerationVariance":{"x":96.95067264573981,"y":0},"name":"PositionBehaviour"},{"priority":0,"allowNegativeValues":false,"sizeStart":{"x":1,"y":1},"sizeEnd":{"x":0,"y":0},"startVariance":0,"endVariance":0,"name":"SizeBehaviour"},{"priority":0,"start":{"_r":254,"_g":134,"_b":14,"_alpha":1},"end":{"_r":254,"_g":14,"_b":14,"_alpha":1},"startVariance":{"_r":0,"_g":0,"_b":0,"_alpha":1},"endVariance":{"_r":0,"_g":0,"_b":0,"_alpha":1},"name":"ColorBehaviour"}],"emitController":{"_maxParticles":0,"_maxLife":1,"_emitPerSecond":66.17266930897812,"_frames":0}}
-},{}],6:[function(require,module,exports){
+},{"./model":15,"./view":27}],2:[function(require,module,exports){
 'use strict';
 
 //
@@ -498,7 +294,7 @@ if ('undefined' !== typeof module) {
   module.exports = EventEmitter;
 }
 
-},{}],7:[function(require,module,exports){
+},{}],3:[function(require,module,exports){
 var backgroundModel = require("../model").backgroundModel;
 var service = require("../service");
 
@@ -531,7 +327,7 @@ BackgroundMenuController.prototype.onRemoveTexture = function() {
 	backgroundModel.texture = null;
 };
 module.exports = BackgroundMenuController;
-},{"../model":19,"../service":21}],8:[function(require,module,exports){
+},{"../model":15,"../service":17}],4:[function(require,module,exports){
 var projectModel = require("../model").projectModel;
 var service = require("../service");
 var util = require("../util");
@@ -570,7 +366,7 @@ BehaviourController.prototype.disableBehaviour = function(behaviour) {
 
 module.exports = BehaviourController;
 
-},{"../model":19,"../service":21,"../util":23}],9:[function(require,module,exports){
+},{"../model":15,"../service":17,"../util":19}],5:[function(require,module,exports){
 var file = require("../service").file;
 var service = require("../service");
 var projectModel = require("../model").projectModel;
@@ -593,13 +389,19 @@ ProjectMenuController.prototype.onLoadProject = function() {
 	var reader = new FileReader();
 	reader.onload = function() {
 		var data = JSON.parse(reader.result);
+		this.loadProject(data);
 
-		projectModel.deserialize(data.project);
-		texturesModel.deserialize(data.texture);
-		backgroundModel.deserialize(data.background);
 	}.bind(this);
 
 	reader.readAsText(document.getElementById("load-project").files[0]);
+};
+
+ProjectMenuController.prototype.loadProject = function(data) {
+	projectModel.deserialize(data.project);
+	texturesModel.deserialize(data.texture);
+	backgroundModel.deserialize(data.background);
+
+	service.msg.emit("project/loaded");
 };
 
 ProjectMenuController.prototype.onSaveProject = function() {
@@ -629,7 +431,8 @@ ProjectMenuController.prototype.reset = function() {
 };
 
 ProjectMenuController.prototype.onLoadPredefined = function(name) {
-	projectModel.setEmitterConfig(predefinedModel.getByName(name));
+	this.loadProject(predefinedModel.getByName(name));
+	//projectModel.setEmitterConfig(predefinedModel.getByName(name));
 };
 
 ProjectMenuController.prototype.refreshBehaviours = function() {
@@ -641,7 +444,7 @@ ProjectMenuController.prototype.refreshBehaviours = function() {
 };
 
 module.exports = ProjectMenuController;
-},{"../model":19,"../service":21}],10:[function(require,module,exports){
+},{"../model":15,"../service":17}],6:[function(require,module,exports){
 var service = require("../service");
 var texturesModel = require("../model").texturesModel;
 
@@ -656,14 +459,12 @@ TextureMenuController.prototype.exportParticleTexture = function() {
 
 TextureMenuController.prototype.onTextureChange = function(name) {
 	texturesModel.setTextureByName(name);
-	service.msg.emit("texture/changed");
 };
 
 TextureMenuController.prototype.onUploadTexture = function() {
 	var reader = new FileReader();
 	reader.onload = function() {
 		texturesModel.setTexture(PIXI.Texture.fromImage(reader.result));
-		service.msg.emit("texture/changed");
 		document.getElementById("load-texture").value = null;
 
 	}.bind(this);
@@ -672,7 +473,7 @@ TextureMenuController.prototype.onUploadTexture = function() {
 };
 
 module.exports = TextureMenuController;
-},{"../model":19,"../service":21}],11:[function(require,module,exports){
+},{"../model":15,"../service":17}],7:[function(require,module,exports){
 var ProjectMenuController = require("./ProjectMenuController.js");
 var TextureMenuController = require("./TextureMenuController.js");
 var BackgroundMenuController = require("./BackgroundMenuController.js");
@@ -684,7 +485,7 @@ module.exports = {
 	backgroundMenuController: new BackgroundMenuController(),
 	behaviourController: new BehaviourController()
 };
-},{"./BackgroundMenuController.js":7,"./BehaviourController.js":8,"./ProjectMenuController.js":9,"./TextureMenuController.js":10}],12:[function(require,module,exports){
+},{"./BackgroundMenuController.js":3,"./BehaviourController.js":4,"./ProjectMenuController.js":5,"./TextureMenuController.js":6}],8:[function(require,module,exports){
 var Model = require("./Model.js");
 var util = require("../util");
 
@@ -722,7 +523,7 @@ BackgroundModel.prototype.deserialize = function(data) {
 };
 
 module.exports = BackgroundModel;
-},{"../util":23,"./Model.js":14}],13:[function(require,module,exports){
+},{"../util":19,"./Model.js":10}],9:[function(require,module,exports){
 function BehaviourModel() {
 
 	this.behaviours = {};
@@ -750,7 +551,7 @@ BehaviourModel.prototype.getBehaviourByName = function(name) {
 };
 
 module.exports = BehaviourModel;
-},{}],14:[function(require,module,exports){
+},{}],10:[function(require,module,exports){
 var EventEmitter = require("eventemitter3");
 var util = require("../util");
 
@@ -782,7 +583,7 @@ Model.prototype.property = function(property, defaultValue) {
 };
 
 module.exports = Model;
-},{"../util":23,"eventemitter3":6}],15:[function(require,module,exports){
+},{"../util":19,"eventemitter3":2}],11:[function(require,module,exports){
 function ParticleModel(){
 	this.texture = null;
 	this.name = null;
@@ -791,40 +592,45 @@ function ParticleModel(){
 
 
 module.exports = ParticleModel;
-},{}],16:[function(require,module,exports){
-var CONFIG = {
-	default: require("../../assets/config/default.json"),
-	snow: require("../../assets/config/snow.json"),
-	snow2: require("../../assets/config/snow2.json"),
-	test: require("../../assets/config/test.json")
-};
-
+},{}],12:[function(require,module,exports){
 function PredefinedModel() {
-
+	this.configs = {};
 }
 
+PredefinedModel.prototype.add = function(name, config) {
+	this.configs[name] = config;
+};
+
 PredefinedModel.prototype.getByName = function(name) {
-	return CONFIG[name];
+	return this.configs[name];
 };
 
 PredefinedModel.prototype.getAllConfigs = function() {
-	return CONFIG; //todo: concat?
+	return this.configs; //todo: concat?
 };
 
 PredefinedModel.prototype.getNames = function() {
-	return Object.keys(CONFIG);
+	return Object.keys(this.configs);
+};
+
+PredefinedModel.prototype.getConfigUrls = function() {
+	return [
+		"assets/config/default.jup",
+		"assets/config/firework.jup"
+	];
 };
 
 module.exports = PredefinedModel;
-},{"../../assets/config/default.json":2,"../../assets/config/snow.json":3,"../../assets/config/snow2.json":4,"../../assets/config/test.json":5}],17:[function(require,module,exports){
+},{}],13:[function(require,module,exports){
 var Model = require("./Model.js");
 var util = require("../util");
 
 function ProjectModel() {
 	Model.call(this);
 
+	this.stageSize = new PIXI.Point(600, 600);
 	this.emitter = new jupiter.Emitter();
-	this.property("markerPosition", new PIXI.Point(0, 0));
+	this.property("markerPosition", new PIXI.Point(0.5, 0.5));
 }
 
 util.inherit(ProjectModel, Model);
@@ -844,25 +650,34 @@ ProjectModel.prototype.hasActiveBehaviour = function(behaviour) {
 ProjectModel.prototype.serialize = function() {
 	var data = {};
 	data.emitterConfig = this.emitter.getParser().write();
-	data.markerPosition = {x: this.imagePosition.x, y: this.imagePosition.y};
+	data.markerPosition = {x: this.markerPosition.x, y: this.markerPosition.y};
 
 	return data;
 };
 
 ProjectModel.prototype.deserialize = function(data) {
-	this.imagePosition = new PIXI.Point(data.imagePosition.x, data.imagePosition.y);
+	this.markerPosition = new PIXI.Point(data.markerPosition.x, data.markerPosition.y);
 	this.setEmitterConfig(data.emitterConfig);
 };
 
 ProjectModel.prototype.setEmitterConfig = function(config) {
-
-	console.log(config);
 	this.emitter.getParser().read(config);
 	this.emit("emitterConfig/changed");
 };
 
+Object.defineProperty(ProjectModel.prototype, "markerPositionInStageCoordinates", {
+	get: function() {
+		return new PIXI.Point(this.markerPosition.x * this.stageSize.x, this.markerPosition.y * this.stageSize.y);
+	},
+	set: function(value) {
+		this.markerPosition = new PIXI.Point(value.x / this.stageSize.x, value.y / this.stageSize.y);
+	}
+});
 module.exports = ProjectModel;
-},{"../util":23,"./Model.js":14}],18:[function(require,module,exports){
+},{"../util":19,"./Model.js":10}],14:[function(require,module,exports){
+var Model = require("./Model.js");
+var util = require("../util");
+
 var PREDEFINED_TEXTURES = [
 	{name: "circle", url: "assets/circle.png"},
 	{name: "cloud", url: "assets/cloud.png"},
@@ -872,9 +687,14 @@ var PREDEFINED_TEXTURES = [
 ];
 
 function TexturesModel() {
+	Model.call(this);
+
 	this.textures = PREDEFINED_TEXTURES.concat();
 	this.currentTextureName = null;
+	this.property("currentTexture", null);
 }
+
+util.inherit(TexturesModel, Model);
 
 TexturesModel.prototype.setDefaultTexture = function() {
 	this.setTextureByName("circle");
@@ -924,7 +744,7 @@ TexturesModel.prototype.deserialize = function(data) {
 };
 
 module.exports = TexturesModel;
-},{}],19:[function(require,module,exports){
+},{"../util":19,"./Model.js":10}],15:[function(require,module,exports){
 var ProjectModel = require("./ProjectModel.js");
 var BackgroundModel = require("./BackgroundModel.js");
 var ParticleModel = require("./ParticleModel.js");
@@ -940,7 +760,7 @@ module.exports = {
 	texturesModel: new TexturesModel(),
 	backgroundModel: new BackgroundModel()
 };
-},{"./BackgroundModel.js":12,"./BehaviourModel.js":13,"./ParticleModel.js":15,"./PredefinedModel.js":16,"./ProjectModel.js":17,"./TexturesModel.js":18}],20:[function(require,module,exports){
+},{"./BackgroundModel.js":8,"./BehaviourModel.js":9,"./ParticleModel.js":11,"./PredefinedModel.js":12,"./ProjectModel.js":13,"./TexturesModel.js":14}],16:[function(require,module,exports){
 function FileService() {
 
 }
@@ -956,7 +776,7 @@ FileService.prototype.saveAs = function(name, data) {
 };
 
 module.exports = FileService;
-},{}],21:[function(require,module,exports){
+},{}],17:[function(require,module,exports){
 var FileService = require("./FileService.js");
 var EventEmitter = require("eventemitter3");
 
@@ -964,7 +784,7 @@ module.exports = {
 	msg: new EventEmitter(),
 	file: new FileService()
 };
-},{"./FileService.js":20,"eventemitter3":6}],22:[function(require,module,exports){
+},{"./FileService.js":16,"eventemitter3":2}],18:[function(require,module,exports){
 module.exports = function(scope) {
 	for (var i in scope) {
 		if (typeof scope[i] === "function") {
@@ -972,17 +792,17 @@ module.exports = function(scope) {
 		}
 	}
 };
-},{}],23:[function(require,module,exports){
+},{}],19:[function(require,module,exports){
 module.exports = {
 	inherit: require("./inherit.js"),
 	bind: require("./bind.js")
 };
-},{"./bind.js":22,"./inherit.js":24}],24:[function(require,module,exports){
+},{"./bind.js":18,"./inherit.js":20}],20:[function(require,module,exports){
 module.exports = function(childClass, baseClass) {
 	childClass.prototype = Object.create(baseClass.prototype);
 	childClass.prototype.constructor = childClass;
 };
-},{}],25:[function(require,module,exports){
+},{}],21:[function(require,module,exports){
 var Menu = require("./menu/Menu.js");
 var ParticleView = require("./ParticleView.js");
 var Stage = require("./stage/Stage.js");
@@ -1001,6 +821,7 @@ function MainView() {
 }
 
 MainView.prototype.createStage = function() {
+	//todo: size from 
 	return new Stage(new PIXI.Rectangle(0, 0, 600, 600));
 };
 
@@ -1042,7 +863,7 @@ MainView.prototype.draw = function() {
 };
 
 module.exports = MainView;
-},{"../model":19,"../service":21,"./ParticleView.js":28,"./menu/Menu.js":36,"./stage/Stage.js":43}],26:[function(require,module,exports){
+},{"../model":15,"../service":17,"./ParticleView.js":24,"./menu/Menu.js":32,"./stage/Stage.js":39}],22:[function(require,module,exports){
 var util = require("../util");
 var service = require("../service");
 
@@ -1085,14 +906,8 @@ Marker.prototype.onMouseUp = function() {
 Marker.prototype.onMouseMove = function(event) {
 	if (this.dragging) {
 		var newPosition = event.data.getLocalPosition(this.parent);
-		this.setPosition(newPosition);
+		this.onDrag(newPosition);
 	}
-};
-
-Marker.prototype.setPosition = function(value) {
-	this.x = value.x;
-	this.y = value.y;
-	this.onDrag(value);
 };
 
 Marker.prototype.onMouseOverStage = function() {
@@ -1104,7 +919,7 @@ Marker.prototype.onMouseOutStage = function() {
 };
 
 module.exports = Marker;
-},{"../service":21,"../util":23}],27:[function(require,module,exports){
+},{"../service":17,"../util":19}],23:[function(require,module,exports){
 var util = require("../util");
 var service = require("../service");
 var texturesModel = require("../model").texturesModel;
@@ -1113,7 +928,7 @@ function ParticleRenderer(emitter, config) {
 	jupiter.Renderer.call(this, emitter, config);
 	util.bind(this);
 
-	service.msg.on("texture/changed", this.onTextureChanged);
+	texturesModel.on("currentTexture/changed", this.onTextureChanged);
 }
 
 util.inherit(ParticleRenderer, jupiter.Renderer);
@@ -1130,9 +945,15 @@ ParticleRenderer.prototype.onTextureChanged = function() {
 	}
 };
 
+ParticleRenderer.prototype.onEmitComplete = function() {
+	jupiter.Renderer.prototype.onEmitComplete.call(this);
+	this.play();
+};
+
 module.exports = ParticleRenderer;
-},{"../model":19,"../service":21,"../util":23}],28:[function(require,module,exports){
+},{"../model":15,"../service":17,"../util":19}],24:[function(require,module,exports){
 var util = require("../util");
+var service = require("../service");
 var ParticleRenderer = require("./ParticleRenderer.js");
 var projectModel = require("../model").projectModel;
 var texturesModel = require("../model").texturesModel;
@@ -1146,24 +967,29 @@ function ParticleView() {
 	this.renderer = this.addChild(renderer);
 
 	projectModel.on("markerPosition/changed", this.refreshRendererPosition);
+	service.msg.on("project/loaded", this.onProjectLoaded);
+
 	this.refreshRendererPosition();
 }
 
 util.inherit(ParticleView, PIXI.Container);
 
 ParticleView.prototype.refreshRendererPosition = function() {
-	console.log(projectModel.emitter);
-	this.renderer.position = projectModel.markerPosition;
+	this.renderer.position = projectModel.markerPositionInStageCoordinates;
+};
+
+ParticleView.prototype.onProjectLoaded = function() {
+	this.renderer.reset();
 };
 
 module.exports = ParticleView;
 
 
-},{"../model":19,"../util":23,"./ParticleRenderer.js":27}],29:[function(require,module,exports){
+},{"../model":15,"../service":17,"../util":19,"./ParticleRenderer.js":23}],25:[function(require,module,exports){
 module.exports = {
 	slider: require("./slider.js")
 };
-},{"./slider.js":30}],30:[function(require,module,exports){
+},{"./slider.js":26}],26:[function(require,module,exports){
 module.exports = function(title, style) {
 	style = style || {};
 
@@ -1203,12 +1029,12 @@ module.exports = function(title, style) {
 
 	return style;
 };
-},{}],31:[function(require,module,exports){
+},{}],27:[function(require,module,exports){
 module.exports = {
 	menu: require("./menu"),
 	MainView: require("./MainView.js")
 };
-},{"./MainView.js":25,"./menu":42}],32:[function(require,module,exports){
+},{"./MainView.js":21,"./menu":38}],28:[function(require,module,exports){
 var SubMenu = require("./SubMenu.js");
 var util = require("../../util");
 var service = require("../../service");
@@ -1258,7 +1084,7 @@ BackgroundMenu.prototype.onLockChanged = function() {
 	service.msg.emit("background/changeLocked");
 };
 module.exports = BackgroundMenu;
-},{"../../model":19,"../../service":21,"../../util":23,"./SubMenu.js":40}],33:[function(require,module,exports){
+},{"../../model":15,"../../service":17,"../../util":19,"./SubMenu.js":36}],29:[function(require,module,exports){
 var SubMenu = require("./SubMenu.js");
 var util = require("../../util");
 var behaviourModel = require("../../model").behaviourModel;
@@ -1350,7 +1176,7 @@ module.exports = ColorMenu;
 
 
 
-},{"../../model":19,"../../service":21,"../../util":23,"./SubMenu.js":40}],34:[function(require,module,exports){
+},{"../../model":15,"../../service":17,"../../util":19,"./SubMenu.js":36}],30:[function(require,module,exports){
 var SubMenu = require("./SubMenu.js");
 var util = require("../../util");
 var service = require("../../service");
@@ -1365,7 +1191,8 @@ function EmitterMenu() {
 			this.counter("Emit per sec:", {
 				id: "emit_per_second",
 				step: 0.1, value: 20, min: 0, max: 200, align: "center", format: webix.i18n.numberFormat
-			})
+			}),
+			{id: "duration", view: "text", value: -1, label: "Duration", labelAlign: "left"}
 		]
 
 	};
@@ -1375,6 +1202,7 @@ util.inherit(EmitterMenu, SubMenu);
 
 EmitterMenu.prototype.onMenuCreated = function() {
 	$$("emit_per_second").attachEvent("onChange", this.onEmitPerSecondChanged);
+	$$("duration").attachEvent("onChange", this.onDurationChanged);
 	service.msg.on("emitter/changed", this.onEmitterChanged);
 };
 
@@ -1382,12 +1210,22 @@ EmitterMenu.prototype.onEmitPerSecondChanged = function(value) {
 	projectModel.emitter.emitController.emitPerSecond = value;
 };
 
+EmitterMenu.prototype.onDurationChanged = function(value) {
+	value = parseFloat(value);
+	if (!isNaN(value)) {
+		projectModel.emitter.emitController.duration = value;
+	}
+
+	$$("duration").setValue(projectModel.emitter.emitController.duration);
+};
+
 EmitterMenu.prototype.onEmitterChanged = function() {
 	$$("emit_per_second").setValue(projectModel.emitter.emitController.emitPerSecond);
+	$$("duration").setValue(projectModel.emitter.emitController.duration);
 };
 
 module.exports = EmitterMenu;
-},{"../../model":19,"../../service":21,"../../util":23,"./SubMenu.js":40}],35:[function(require,module,exports){
+},{"../../model":15,"../../service":17,"../../util":19,"./SubMenu.js":36}],31:[function(require,module,exports){
 var SubMenu = require("./SubMenu.js");
 var util = require("../../util");
 var service = require("../../service");
@@ -1424,7 +1262,7 @@ LifeMenu.prototype.getBehaviour = function() {
 };
 
 module.exports = LifeMenu;
-},{"../../model":19,"../../service":21,"../../util":23,"./SubMenu.js":40}],36:[function(require,module,exports){
+},{"../../model":15,"../../service":17,"../../util":19,"./SubMenu.js":36}],32:[function(require,module,exports){
 var ProjectMenu = require("./ProjectMenu.js");
 var TextureMenu = require("./TextureMenu.js");
 var BackgroundMenu = require("./BackgroundMenu.js");
@@ -1491,7 +1329,7 @@ Menu.prototype.onMenuItemClick = function(id) {
 	item.view.onActive();
 };
 module.exports = Menu;
-},{"../../service":21,"./BackgroundMenu.js":32,"./ColorMenu.js":33,"./EmitterMenu.js":34,"./LifeMenu.js":35,"./PositionMenu.js":37,"./ProjectMenu.js":38,"./SizeMenu.js":39,"./TextureMenu.js":41}],37:[function(require,module,exports){
+},{"../../service":17,"./BackgroundMenu.js":28,"./ColorMenu.js":29,"./EmitterMenu.js":30,"./LifeMenu.js":31,"./PositionMenu.js":33,"./ProjectMenu.js":34,"./SizeMenu.js":35,"./TextureMenu.js":37}],33:[function(require,module,exports){
 var SubMenu = require("./SubMenu.js");
 var inherit = require("../../util").inherit;
 var bind = require("../../util").bind;
@@ -1614,7 +1452,7 @@ module.exports = PositionMenu;
 
 
 
-},{"../../model":19,"../../service":21,"../../util":23,"./SubMenu.js":40}],38:[function(require,module,exports){
+},{"../../model":15,"../../service":17,"../../util":19,"./SubMenu.js":36}],34:[function(require,module,exports){
 var controller = require("../../controller").projectMenuController;
 var util = require("../../util");
 var service = require("../../service");
@@ -1693,7 +1531,7 @@ ProjectMenu.prototype.onPredefinedClick = function(id) {
 };
 
 module.exports = ProjectMenu;
-},{"../../controller":11,"../../model":19,"../../service":21,"../../util":23}],39:[function(require,module,exports){
+},{"../../controller":7,"../../model":15,"../../service":17,"../../util":19}],35:[function(require,module,exports){
 var SubMenu = require("./SubMenu.js");
 var util = require("../../util");
 var behaviourModel = require("../../model").behaviourModel;
@@ -1782,7 +1620,7 @@ module.exports = SizeMenu;
 
 
 
-},{"../../model":19,"../../service":21,"../../util":23,"./SubMenu.js":40}],40:[function(require,module,exports){
+},{"../../model":15,"../../service":17,"../../util":19,"./SubMenu.js":36}],36:[function(require,module,exports){
 var extension = require("../extension");
 var service = require("../../service");
 
@@ -1858,7 +1696,7 @@ SubMenu.prototype._setup = function(defaultStyle, extraStyle) {
 };
 
 module.exports = SubMenu;
-},{"../../service":21,"../extension":29}],41:[function(require,module,exports){
+},{"../../service":17,"../extension":25}],37:[function(require,module,exports){
 var SubMenu = require("./SubMenu.js");
 var util = require("../../util");
 var service = require("../../service");
@@ -1969,12 +1807,12 @@ function imageTemplate(obj) {
 
 
 
-},{"../../controller":11,"../../model":19,"../../service":21,"../../util":23,"./SubMenu.js":40}],42:[function(require,module,exports){
+},{"../../controller":7,"../../model":15,"../../service":17,"../../util":19,"./SubMenu.js":36}],38:[function(require,module,exports){
 module.exports = {
 	Menu: require("./Menu.js"),
 	ProjectMenu: require("./ProjectMenu.js")
 };
-},{"./Menu.js":36,"./ProjectMenu.js":38}],43:[function(require,module,exports){
+},{"./Menu.js":32,"./ProjectMenu.js":34}],39:[function(require,module,exports){
 var util = require("../../util");
 var service = require("../../service");
 var StageBackground = require("./StageBackground.js");
@@ -1985,6 +1823,7 @@ function Stage(rect) {
 	PIXI.Container.call(this);
 	util.bind(this);
 
+	this.rect = rect;
 	this.hitArea = rect;
 	this.interactive = true;
 	this.hasFocus = false;
@@ -2001,18 +1840,24 @@ function Stage(rect) {
 	background.x = rect.width / 2;
 	background.y = rect.height / 2;
 
-	var marker = new Marker(function(position) {
-		projectModel.markerPosition = position.clone();
-	});
-	this.addChild(marker);
+	this.marker = this.addChild(new Marker(this.onMarkerDrag));
+	projectModel.on("markerPosition/changed", this.onMarkerPositionChanged);
 
-	marker.setPosition(new PIXI.Point(rect.width / 2, rect.height / 2));
+	this.onMarkerPositionChanged();
 }
 
 util.inherit(Stage, PIXI.Container);
 
+Stage.prototype.onMarkerDrag = function(position) {
+	projectModel.markerPositionInStageCoordinates = position;
+};
+
+Stage.prototype.onMarkerPositionChanged = function() {
+	this.marker.position = projectModel.markerPositionInStageCoordinates;
+};
+
 module.exports = Stage;
-},{"../../model":19,"../../service":21,"../../util":23,"../Marker.js":26,"./StageBackground.js":44}],44:[function(require,module,exports){
+},{"../../model":15,"../../service":17,"../../util":19,"../Marker.js":22,"./StageBackground.js":40}],40:[function(require,module,exports){
 var util = require("../../util");
 var service = require("../../service");
 var backgroundModel = require("../../model").backgroundModel;
@@ -2035,7 +1880,6 @@ function StageBackground() {
 util.inherit(StageBackground, PIXI.Container);
 
 StageBackground.prototype.onIsLockedChanged = function() {
-	console.log("locked", backgroundModel.isLocked);
 	this.interactive = !backgroundModel.isLocked;
 	this.buttonMode = !backgroundModel.isLocked;
 };
@@ -2081,7 +1925,7 @@ StageBackground.prototype.onMouseMove = function(event) {
 };
 
 module.exports = StageBackground;
-},{"../../model":19,"../../service":21,"../../util":23}]},{},[1])
+},{"../../model":15,"../../service":17,"../../util":19}]},{},[1])
 
 
 //# sourceMappingURL=jupiter_designer.js.map

@@ -6,7 +6,7 @@ function ParticleRenderer(emitter, config) {
 	jupiter.Renderer.call(this, emitter, config);
 	util.bind(this);
 
-	service.msg.on("texture/changed", this.onTextureChanged);
+	texturesModel.on("currentTexture/changed", this.onTextureChanged);
 }
 
 util.inherit(ParticleRenderer, jupiter.Renderer);
@@ -21,6 +21,11 @@ ParticleRenderer.prototype.onTextureChanged = function() {
 	for (i = 0; i < this.children.length; ++i) {
 		this.children[i].texture = texturesModel.getCurrentTexture();
 	}
+};
+
+ParticleRenderer.prototype.onEmitComplete = function() {
+	jupiter.Renderer.prototype.onEmitComplete.call(this);
+	this.play();
 };
 
 module.exports = ParticleRenderer;

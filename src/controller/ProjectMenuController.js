@@ -20,13 +20,19 @@ ProjectMenuController.prototype.onLoadProject = function() {
 	var reader = new FileReader();
 	reader.onload = function() {
 		var data = JSON.parse(reader.result);
+		this.loadProject(data);
 
-		projectModel.deserialize(data.project);
-		texturesModel.deserialize(data.texture);
-		backgroundModel.deserialize(data.background);
 	}.bind(this);
 
 	reader.readAsText(document.getElementById("load-project").files[0]);
+};
+
+ProjectMenuController.prototype.loadProject = function(data) {
+	projectModel.deserialize(data.project);
+	texturesModel.deserialize(data.texture);
+	backgroundModel.deserialize(data.background);
+
+	service.msg.emit("project/loaded");
 };
 
 ProjectMenuController.prototype.onSaveProject = function() {
@@ -56,7 +62,8 @@ ProjectMenuController.prototype.reset = function() {
 };
 
 ProjectMenuController.prototype.onLoadPredefined = function(name) {
-	projectModel.setEmitterConfig(predefinedModel.getByName(name));
+	this.loadProject(predefinedModel.getByName(name));
+	//projectModel.setEmitterConfig(predefinedModel.getByName(name));
 };
 
 ProjectMenuController.prototype.refreshBehaviours = function() {

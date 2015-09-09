@@ -20,7 +20,6 @@ function StageBackground() {
 util.inherit(StageBackground, PIXI.Container);
 
 StageBackground.prototype.onIsLockedChanged = function() {
-	console.log("locked", backgroundModel.isLocked);
 	this.interactive = !backgroundModel.isLocked;
 	this.buttonMode = !backgroundModel.isLocked;
 };
