@@ -11,19 +11,34 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
 
     <title></title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+
     <script src="./lib/pixi.js" type="text/javascript"></script>
     <script src="./lib/jupiter_pixi.js" type="text/javascript"></script>
     <script src="./lib/stats.js" type="text/javascript"></script>
     <script src="./lib/FileSaver.min.js" type="text/javascript"></script>
     <script src="./lib/webix.js" type="text/javascript"></script>
+    <script src="./lib/spectrum.js" type="text/javascript"></script>
     <script src="./bin/jupiter_designer.js" type="text/javascript"></script>
 
     <link rel="stylesheet" href="./css/webix.css" type="text/css">
     <link rel="stylesheet" href="./css/menu.css" type="text/css">
+    <link rel="stylesheet" href="./css/spectrum.css" type="text/css">
 
 </head>
-<body>
+<br>
+
 <div id="stage" style="width:600px;height:400px;"></div>
+
+<div id="start_color">
+    <input type='text' id="start_color_input"/>
+    <em id='start_color_info'  style="font-size: 12px"></em>
+</div>
+
+<div id="end_color">
+    <input type='text' id="end_color_input"/>
+    <em id='end_color_info' style="font-size: 12px"></em>
+</div>
 
 <input type="file" accept=".json" id="load-config" style="visibility:hidden">
 <input type="file" accept=".png" id="load-texture" style="visibility:hidden">

@@ -1100,8 +1100,12 @@ function ColorMenu() {
 	this.ui = {
 		rows: [
 			this.checkbox("Enabled:", {id: "color_enable", value: 0}),
-			{view: "colorpicker", id: "color_start", label: "Start", name: "color", value: "#ffffff"},
-			{view: "colorpicker", id: "color_end", label: "End", name: "color", value: "#ffffff"},
+			//{view: "colorpicker", id: "color_start", label: "Start", name: "color", value: "#ffffff"},
+			//{view: "colorpicker", id: "color_end", label: "End", name: "color", value: "#ffffff"},
+			this.section("Start:"),
+			{view: "template", content: "start_color", autoheight: true},
+			this.section("End:"),
+			{view: "template", content: "end_color", autoheight: true},
 			this.section("Start variance:"),
 			this.slider("start_variance_r", "R:"),
 			this.slider("start_variance_g", "G:"),
@@ -1115,9 +1119,42 @@ function ColorMenu() {
 
 		]
 	};
+
+	var startColor = $("#start_color_input");
+	var startColorInfo = $("#start_color_info");
+	startColor.spectrum(this.getColorPickerConfig());
+
+	this.getStartColor = function() {
+		return startColor;
+	};
+	this.getStartColorInfo = function() {
+		return startColorInfo;
+	};
+
+	var endColor = $("#end_color_input");
+	var endColorInfo = $("#end_color_info");
+	endColor.spectrum(this.getColorPickerConfig());
+
+	this.getEndColor = function() {
+		return endColor;
+	};
+
+	this.getEndColorInfo = function() {
+		return endColorInfo;
+	};
 }
 
 util.inherit(ColorMenu, SubMenu);
+
+ColorMenu.prototype.getColorPickerConfig = function() {
+	return {
+		color: "#ffffff",
+		showInput: true,
+		showAlpha: true,
+		preferredFormat: "hex",
+		clickoutFiresChange: true,
+	};
+};
 
 ColorMenu.prototype.slider = function(id, label) {
 	return SubMenu.prototype.slider.call(this, "", {
@@ -1139,16 +1176,21 @@ ColorMenu.prototype.onMenuCreated = function() {
 	$$("color_enable").attachEvent("onChange", this.onEnableChanged);
 	service.msg.on("emitter/changed", this.onEmitterChanged);
 
-	$$("color_start").attachEvent("onChange", this.onStartColorChanged);
-	$$("color_end").attachEvent("onChange", this.onEndColorChanged);
+	this.getStartColor().on("move.spectrum", this.onStartColorChanged);
+	this.getStartColor().on("hide.spectrum", this.onStartColorChanged);
+	this.getEndColor().on("move.spectrum", this.onEndColorChanged);
+	this.getEndColor().on("hide.spectrum", this.onEndColorChanged);
+
 };
 
 ColorMenu.prototype.onStartColorChanged = function() {
-	this.getBehaviour().start.hex = $$("color_start").getValue().replace("#", "0x");
+	var color = this.getStartColor().spectrum("get").toRgb();
+	this.getBehaviour().start.set(color.r, color.g, color.b, color.a);
 };
 
 ColorMenu.prototype.onEndColorChanged = function() {
-	this.getBehaviour().end.hex = $$("color_end").getValue().replace("#", "0x");
+	var color = this.getEndColor().spectrum("get").toRgb();
+	this.getBehaviour().end.set(color.r, color.g, color.b, color.a);
 };
 
 ColorMenu.prototype.onEnableChanged = function(value) {
@@ -1158,8 +1200,15 @@ ColorMenu.prototype.onEnableChanged = function(value) {
 ColorMenu.prototype.onEmitterChanged = function() {
 	$$("color_enable").setValue(projectModel.hasActiveBehaviour(this.getBehaviour()));
 
-	$$("color_start").setValue("#" + this.getBehaviour().start.hex.toString(16));
-	$$("color_end").setValue("#" + this.getBehaviour().end.hex.toString(16));
+	this.getStartColor().spectrum("set", "#" + this.getBehaviour().start.hex.toString(16));
+	this.getEndColor().spectrum("set", "#" + this.getBehaviour().end.hex.toString(16));
+
+	this.refreshColorInfo();
+};
+
+ColorMenu.prototype.refreshColorInfo = function() {
+	this.getStartColorInfo().text(this.getStartColor().spectrum("get").toRgbString());
+	this.getEndColorInfo().text(this.getEndColor().spectrum("get").toRgbString());
 };
 
 ColorMenu.prototype.getStartVariance = function() {
