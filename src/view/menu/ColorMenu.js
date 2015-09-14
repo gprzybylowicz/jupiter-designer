@@ -11,22 +11,20 @@ function ColorMenu() {
 	this.ui = {
 		rows: [
 			this.checkbox("Enabled:", {id: "color_enable", value: 0}),
-			//{view: "colorpicker", id: "color_start", label: "Start", name: "color", value: "#ffffff"},
-			//{view: "colorpicker", id: "color_end", label: "End", name: "color", value: "#ffffff"},
 			this.section("Start:"),
 			{view: "template", content: "start_color", autoheight: true},
 			this.section("End:"),
 			{view: "template", content: "end_color", autoheight: true},
 			this.section("Start variance:"),
-			this.slider("start_variance_r", "R:"),
-			this.slider("start_variance_g", "G:"),
-			this.slider("start_variance_b", "B:"),
-			this.slider("start_variance_alpha", "A:"),
+			this.colorSlider("start_variance_r", "R:"),
+			this.colorSlider("start_variance_g", "G:"),
+			this.colorSlider("start_variance_b", "B:"),
+			this.slider("", {id: "start_variance_alpha", label: "A:", labelWidth: 30, min: 0, max: 1, step: 0.01, value: 0}),
 			this.section("End variance:"),
-			this.slider("end_variance_r", "R:"),
-			this.slider("end_variance_g", "G:"),
-			this.slider("end_variance_b", "B:"),
-			this.slider("end_variance_alpha", "A:")
+			this.colorSlider("end_variance_r", "R:"),
+			this.colorSlider("end_variance_g", "G:"),
+			this.colorSlider("end_variance_b", "B:"),
+			this.slider("", {id: "end_variance_alpha", label: "A:", labelWidth: 30, min: 0, max: 1, step: 0.01, value: 0})
 
 		]
 	};
@@ -67,8 +65,8 @@ ColorMenu.prototype.getColorPickerConfig = function() {
 	};
 };
 
-ColorMenu.prototype.slider = function(id, label) {
-	return SubMenu.prototype.slider.call(this, "", {
+ColorMenu.prototype.colorSlider = function(id, label) {
+	return this.slider.call(this, "", {
 		id: id, label: label, labelWidth: 30, min: 0, max: 255, step: 1, value: 0
 	});
 };
