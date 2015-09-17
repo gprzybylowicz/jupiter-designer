@@ -1227,39 +1227,52 @@ module.exports = ColorMenu;
 
 },{"../../model":15,"../../service":17,"../../util":19,"./SubMenu.js":36}],30:[function(require,module,exports){
 var SubMenu = require("./SubMenu.js");
+var LifeMenu = require("./LifeMenu.js");
 var util = require("../../util");
 var service = require("../../service");
 var projectModel = require("../../model").projectModel;
 
-function EmitterMenu() {
+function GeneralMenu() {
 	SubMenu.call(this);
 	util.bind(this);
 
+	this.lifeMenu = new LifeMenu();
+
 	this.ui = {
 		rows: [
-			this.counter("Emit per sec:", {
+			this.section("Emitter:"),
+			this.counter("Emit/sec:", {
 				id: "emit_per_second",
 				step: 0.1, value: 20, min: 0, max: 200, align: "center", format: webix.i18n.numberFormat
 			}),
-			{id: "duration", view: "text", value: -1, label: "Duration", labelAlign: "left"}
+			{id: "duration", view: "text", value: -1, label: "Duration", labelAlign: "left"},
+			this.section("Life:"),
+			this.lifeMenu.ui,
+			this.section("Emission Angle:"),
+
 		]
 
 	};
 }
 
-util.inherit(EmitterMenu, SubMenu);
+util.inherit(GeneralMenu, SubMenu);
 
-EmitterMenu.prototype.onMenuCreated = function() {
+GeneralMenu.prototype.onActive = function() {
+	SubMenu.prototype.onActive.call(this);
+	this.lifeMenu.onActive();
+};
+
+GeneralMenu.prototype.onMenuCreated = function() {
 	$$("emit_per_second").attachEvent("onChange", this.onEmitPerSecondChanged);
 	$$("duration").attachEvent("onChange", this.onDurationChanged);
 	service.msg.on("emitter/changed", this.onEmitterChanged);
 };
 
-EmitterMenu.prototype.onEmitPerSecondChanged = function(value) {
+GeneralMenu.prototype.onEmitPerSecondChanged = function(value) {
 	projectModel.emitter.emitController.emitPerSecond = value;
 };
 
-EmitterMenu.prototype.onDurationChanged = function(value) {
+GeneralMenu.prototype.onDurationChanged = function(value) {
 	value = parseFloat(value);
 	if (!isNaN(value)) {
 		projectModel.emitter.emitController.duration = value;
@@ -1268,13 +1281,13 @@ EmitterMenu.prototype.onDurationChanged = function(value) {
 	$$("duration").setValue(projectModel.emitter.emitController.duration);
 };
 
-EmitterMenu.prototype.onEmitterChanged = function() {
+GeneralMenu.prototype.onEmitterChanged = function() {
 	$$("emit_per_second").setValue(projectModel.emitter.emitController.emitPerSecond);
 	$$("duration").setValue(projectModel.emitter.emitController.duration);
 };
 
-module.exports = EmitterMenu;
-},{"../../model":15,"../../service":17,"../../util":19,"./SubMenu.js":36}],31:[function(require,module,exports){
+module.exports = GeneralMenu;
+},{"../../model":15,"../../service":17,"../../util":19,"./LifeMenu.js":31,"./SubMenu.js":36}],31:[function(require,module,exports){
 var SubMenu = require("./SubMenu.js");
 var util = require("../../util");
 var service = require("../../service");
@@ -1319,7 +1332,7 @@ var ColorMenu = require("./ColorMenu.js");
 var LifeMenu = require("./LifeMenu.js");
 var PositionMenu = require("./PositionMenu.js");
 var SizeMenu = require("./SizeMenu.js");
-var EmitterMenu = require("./EmitterMenu.js");
+var GeneralMenu = require("./GeneralMenu.js");
 var service = require("../../service");
 
 function Menu() {
@@ -1329,8 +1342,7 @@ function Menu() {
 		{value: "Texture", view: new TextureMenu()},
 		{value: "Background", view: new BackgroundMenu()},
 		{$template: "Separator"},
-		{value: "Emitter", view: new EmitterMenu()},
-		{value: "Life", view: new LifeMenu()},
+		{value: "General", view: new GeneralMenu()},
 		{value: "Color", view: new ColorMenu()},
 		{value: "Position", view: new PositionMenu()},
 		{value: "Size", view: new SizeMenu()}
@@ -1378,7 +1390,7 @@ Menu.prototype.onMenuItemClick = function(id) {
 	item.view.onActive();
 };
 module.exports = Menu;
-},{"../../service":17,"./BackgroundMenu.js":28,"./ColorMenu.js":29,"./EmitterMenu.js":30,"./LifeMenu.js":31,"./PositionMenu.js":33,"./ProjectMenu.js":34,"./SizeMenu.js":35,"./TextureMenu.js":37}],33:[function(require,module,exports){
+},{"../../service":17,"./BackgroundMenu.js":28,"./ColorMenu.js":29,"./GeneralMenu.js":30,"./LifeMenu.js":31,"./PositionMenu.js":33,"./ProjectMenu.js":34,"./SizeMenu.js":35,"./TextureMenu.js":37}],33:[function(require,module,exports){
 var SubMenu = require("./SubMenu.js");
 var inherit = require("../../util").inherit;
 var bind = require("../../util").bind;
@@ -1701,7 +1713,10 @@ SubMenu.prototype.bind = function(id, propertyName, getTargetFunction) {
 SubMenu.prototype.onActive = function() {
 	var rows = this.ui.rows;
 	for (var i = 0; i < rows.length; i++) {
-		$$(rows[i].id).refresh();
+		if($$(rows[i].id).refresh){
+			$$(rows[i].id).refresh();
+
+		}
 	}
 };
 

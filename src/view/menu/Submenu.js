@@ -29,7 +29,10 @@ SubMenu.prototype.bind = function(id, propertyName, getTargetFunction) {
 SubMenu.prototype.onActive = function() {
 	var rows = this.ui.rows;
 	for (var i = 0; i < rows.length; i++) {
-		$$(rows[i].id).refresh();
+		if($$(rows[i].id).refresh){
+			$$(rows[i].id).refresh();
+
+		}
 	}
 };
 
