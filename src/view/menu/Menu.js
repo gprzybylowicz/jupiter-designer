@@ -5,7 +5,7 @@ var ColorMenu = require("./ColorMenu.js");
 var LifeMenu = require("./LifeMenu.js");
 var PositionMenu = require("./PositionMenu.js");
 var SizeMenu = require("./SizeMenu.js");
-var EmitterMenu = require("./EmitterMenu.js");
+var GeneralMenu = require("./GeneralMenu.js");
 var service = require("../../service");
 
 function Menu() {
@@ -15,8 +15,7 @@ function Menu() {
 		{value: "Texture", view: new TextureMenu()},
 		{value: "Background", view: new BackgroundMenu()},
 		{$template: "Separator"},
-		{value: "Emitter", view: new EmitterMenu()},
-		{value: "Life", view: new LifeMenu()},
+		{value: "General", view: new GeneralMenu()},
 		{value: "Color", view: new ColorMenu()},
 		{value: "Position", view: new PositionMenu()},
 		{value: "Size", view: new SizeMenu()}
