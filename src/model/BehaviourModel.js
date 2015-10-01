@@ -5,6 +5,7 @@ function BehaviourModel() {
 	this.addBehaviour(new jupiter.PositionBehaviour());
 	this.addBehaviour(new jupiter.ColorBehaviour());
 	this.addBehaviour(new jupiter.SizeBehaviour());
+	this.addBehaviour(new jupiter.AngularVelocityBehaviour());
 }
 
 BehaviourModel.prototype.addBehaviour = function(behaviour) {

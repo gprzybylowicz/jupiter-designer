@@ -429,7 +429,7 @@ ProjectMenuController.prototype.onLoadConfig = function() {
 };
 
 ProjectMenuController.prototype.reset = function() {
-	this.onLoadPredefined("default");
+	this.onLoadPredefined("radial");
 };
 
 ProjectMenuController.prototype.onLoadPredefined = function(name) {
@@ -533,6 +533,7 @@ function BehaviourModel() {
 	this.addBehaviour(new jupiter.PositionBehaviour());
 	this.addBehaviour(new jupiter.ColorBehaviour());
 	this.addBehaviour(new jupiter.SizeBehaviour());
+	this.addBehaviour(new jupiter.AngularVelocityBehaviour());
 }
 
 BehaviourModel.prototype.addBehaviour = function(behaviour) {
@@ -619,7 +620,8 @@ PredefinedModel.prototype.getConfigUrls = function() {
 	return [
 		"assets/config/default.jup",
 		"assets/config/firework.jup",
-		"assets/config/green_chaos.jup"
+		"assets/config/green_chaos.jup",
+		"assets/config/radial.jup"
 	];
 };
 
@@ -867,7 +869,7 @@ MainView.prototype.draw = function() {
 };
 
 module.exports = MainView;
-},{"../model":15,"../service":17,"./ParticleView.js":23,"./menu/Menu.js":31,"./stage/Stage.js":38}],22:[function(require,module,exports){
+},{"../model":15,"../service":17,"./ParticleView.js":23,"./menu/Menu.js":32,"./stage/Stage.js":39}],22:[function(require,module,exports){
 var util = require("../util");
 var service = require("../service");
 
@@ -1014,7 +1016,79 @@ module.exports = {
 	menu: require("./menu"),
 	MainView: require("./MainView.js")
 };
-},{"./MainView.js":21,"./menu":37}],27:[function(require,module,exports){
+},{"./MainView.js":21,"./menu":38}],27:[function(require,module,exports){
+var SubMenu = require("./SubMenu.js");
+var inherit = require("../../util").inherit;
+var bind = require("../../util").bind;
+var behaviourModel = require("../../model").behaviourModel;
+var projectModel = require("../../model").projectModel;
+var service = require("../../service");
+
+function AngularVelocityMenu() {
+	SubMenu.call(this);
+	bind(this);
+
+	this.ui = {
+		rows: [
+			this.checkbox("Enabled: ", {id: "angular_velocity_enable", value: 0}),
+			this.rangedSlider("degrees", "Degrees/sec:"),
+			this.rangedSlider("degrees_variance", "Degrees variance/sec:")
+		]
+	};
+}
+
+inherit(AngularVelocityMenu, SubMenu);
+
+AngularVelocityMenu.prototype.rangedSlider = function(id, label) {
+	var slider = this.slider(label, {
+		id: id,
+		labelWidth: 30,
+		min: -500,
+		max: 500,
+		step: 0.01,
+		value: 0
+	});
+
+	return slider;
+};
+
+AngularVelocityMenu.prototype.onMenuCreated = function() {
+	this.bind("degrees", "degrees");
+	this.bind("degrees", "degreesVariance");
+	//this.bind("position_variance_x", "x", this.getPositionVariance);
+	//this.bind("position_variance_y", "y", this.getPositionVariance);
+	//
+	//this.bind("velocity_x", "x", this.getVelocity);
+	//this.bind("velocity_y", "y", this.getVelocity);
+	//this.bind("velocity_variance_x", "x", this.getVelocityVariance);
+	//this.bind("velocity_variance_y", "y", this.getVelocityVariance);
+	//
+	//this.bind("acceleration_x", "x", this.getAcceleration);
+	//this.bind("acceleration_y", "y", this.getAcceleration);
+	//this.bind("acceleration_variance_x", "x", this.getAccelerationVariance);
+	//this.bind("acceleration_variance_y", "y", this.getAccelerationVariance);
+	//
+	$$("angular_velocity_enable").attachEvent("onChange", this.onEnableChanged);
+	service.msg.on("emitter/changed", this.onEmitterChanged);
+};
+
+AngularVelocityMenu.prototype.onEnableChanged = function(value) {
+	service.msg.emit("behaviour/setEnable", value, this.getBehaviour());
+};
+
+AngularVelocityMenu.prototype.onEmitterChanged = function() {
+	$$("angular_velocity_enable").setValue(projectModel.hasActiveBehaviour(this.getBehaviour()));
+};
+
+AngularVelocityMenu.prototype.getBehaviour = function() {
+	return behaviourModel.getBehaviourByName("AngularVelocityBehaviour");
+};
+
+module.exports = AngularVelocityMenu;
+
+
+
+},{"../../model":15,"../../service":17,"../../util":19,"./SubMenu.js":36}],28:[function(require,module,exports){
 var SubMenu = require("./SubMenu.js");
 var util = require("../../util");
 var service = require("../../service");
@@ -1064,7 +1138,7 @@ BackgroundMenu.prototype.onLockChanged = function() {
 	service.msg.emit("background/changeLocked");
 };
 module.exports = BackgroundMenu;
-},{"../../model":15,"../../service":17,"../../util":19,"./SubMenu.js":35}],28:[function(require,module,exports){
+},{"../../model":15,"../../service":17,"../../util":19,"./SubMenu.js":36}],29:[function(require,module,exports){
 var SubMenu = require("./SubMenu.js");
 var util = require("../../util");
 var behaviourModel = require("../../model").behaviourModel;
@@ -1203,7 +1277,7 @@ module.exports = ColorMenu;
 
 
 
-},{"../../model":15,"../../service":17,"../../util":19,"./SubMenu.js":35}],29:[function(require,module,exports){
+},{"../../model":15,"../../service":17,"../../util":19,"./SubMenu.js":36}],30:[function(require,module,exports){
 var SubMenu = require("./SubMenu.js");
 var LifeMenu = require("./LifeMenu.js");
 var util = require("../../util");
@@ -1265,7 +1339,7 @@ GeneralMenu.prototype.onEmitterChanged = function() {
 };
 
 module.exports = GeneralMenu;
-},{"../../model":15,"../../service":17,"../../util":19,"./LifeMenu.js":30,"./SubMenu.js":35}],30:[function(require,module,exports){
+},{"../../model":15,"../../service":17,"../../util":19,"./LifeMenu.js":31,"./SubMenu.js":36}],31:[function(require,module,exports){
 var SubMenu = require("./SubMenu.js");
 var util = require("../../util");
 var service = require("../../service");
@@ -1301,12 +1375,12 @@ LifeMenu.prototype.getBehaviour = function() {
 };
 
 module.exports = LifeMenu;
-},{"../../model":15,"../../service":17,"../../util":19,"./SubMenu.js":35}],31:[function(require,module,exports){
+},{"../../model":15,"../../service":17,"../../util":19,"./SubMenu.js":36}],32:[function(require,module,exports){
 var ProjectMenu = require("./ProjectMenu.js");
 var TextureMenu = require("./TextureMenu.js");
 var BackgroundMenu = require("./BackgroundMenu.js");
 var ColorMenu = require("./ColorMenu.js");
-var LifeMenu = require("./LifeMenu.js");
+var AngularVelocityMenu = require("./AngularVelocityMenu.js");
 var PositionMenu = require("./PositionMenu.js");
 var SizeMenu = require("./SizeMenu.js");
 var GeneralMenu = require("./GeneralMenu.js");
@@ -1322,6 +1396,7 @@ function Menu() {
 		{value: "General", view: new GeneralMenu()},
 		{value: "Color", view: new ColorMenu()},
 		{value: "Position", view: new PositionMenu()},
+		{value: "Angular Velocity", view: new AngularVelocityMenu()},
 		{value: "Size", view: new SizeMenu()}
 	];
 
@@ -1367,7 +1442,7 @@ Menu.prototype.onMenuItemClick = function(id) {
 	item.view.onActive();
 };
 module.exports = Menu;
-},{"../../service":17,"./BackgroundMenu.js":27,"./ColorMenu.js":28,"./GeneralMenu.js":29,"./LifeMenu.js":30,"./PositionMenu.js":32,"./ProjectMenu.js":33,"./SizeMenu.js":34,"./TextureMenu.js":36}],32:[function(require,module,exports){
+},{"../../service":17,"./AngularVelocityMenu.js":27,"./BackgroundMenu.js":28,"./ColorMenu.js":29,"./GeneralMenu.js":30,"./PositionMenu.js":33,"./ProjectMenu.js":34,"./SizeMenu.js":35,"./TextureMenu.js":37}],33:[function(require,module,exports){
 var SubMenu = require("./SubMenu.js");
 var inherit = require("../../util").inherit;
 var bind = require("../../util").bind;
@@ -1490,7 +1565,7 @@ module.exports = PositionMenu;
 
 
 
-},{"../../model":15,"../../service":17,"../../util":19,"./SubMenu.js":35}],33:[function(require,module,exports){
+},{"../../model":15,"../../service":17,"../../util":19,"./SubMenu.js":36}],34:[function(require,module,exports){
 var controller = require("../../controller").projectMenuController;
 var util = require("../../util");
 var service = require("../../service");
@@ -1569,7 +1644,7 @@ ProjectMenu.prototype.onPredefinedClick = function(id) {
 };
 
 module.exports = ProjectMenu;
-},{"../../controller":7,"../../model":15,"../../service":17,"../../util":19}],34:[function(require,module,exports){
+},{"../../controller":7,"../../model":15,"../../service":17,"../../util":19}],35:[function(require,module,exports){
 var SubMenu = require("./SubMenu.js");
 var util = require("../../util");
 var behaviourModel = require("../../model").behaviourModel;
@@ -1658,7 +1733,7 @@ module.exports = SizeMenu;
 
 
 
-},{"../../model":15,"../../service":17,"../../util":19,"./SubMenu.js":35}],35:[function(require,module,exports){
+},{"../../model":15,"../../service":17,"../../util":19,"./SubMenu.js":36}],36:[function(require,module,exports){
 var extension = require("../extension");
 var service = require("../../service");
 
@@ -1737,7 +1812,7 @@ SubMenu.prototype._setup = function(defaultStyle, extraStyle) {
 };
 
 module.exports = SubMenu;
-},{"../../service":17,"../extension":24}],36:[function(require,module,exports){
+},{"../../service":17,"../extension":24}],37:[function(require,module,exports){
 var SubMenu = require("./SubMenu.js");
 var util = require("../../util");
 var service = require("../../service");
@@ -1848,12 +1923,12 @@ function imageTemplate(obj) {
 
 
 
-},{"../../controller":7,"../../model":15,"../../service":17,"../../util":19,"./SubMenu.js":35}],37:[function(require,module,exports){
+},{"../../controller":7,"../../model":15,"../../service":17,"../../util":19,"./SubMenu.js":36}],38:[function(require,module,exports){
 module.exports = {
 	Menu: require("./Menu.js"),
 	ProjectMenu: require("./ProjectMenu.js")
 };
-},{"./Menu.js":31,"./ProjectMenu.js":33}],38:[function(require,module,exports){
+},{"./Menu.js":32,"./ProjectMenu.js":34}],39:[function(require,module,exports){
 var util = require("../../util");
 var service = require("../../service");
 var StageBackground = require("./StageBackground.js");
@@ -1898,7 +1973,7 @@ Stage.prototype.onMarkerPositionChanged = function() {
 };
 
 module.exports = Stage;
-},{"../../model":15,"../../service":17,"../../util":19,"../Marker.js":22,"./StageBackground.js":39}],39:[function(require,module,exports){
+},{"../../model":15,"../../service":17,"../../util":19,"../Marker.js":22,"./StageBackground.js":40}],40:[function(require,module,exports){
 var util = require("../../util");
 var service = require("../../service");
 var backgroundModel = require("../../model").backgroundModel;

@@ -58,7 +58,7 @@ ProjectMenuController.prototype.onLoadConfig = function() {
 };
 
 ProjectMenuController.prototype.reset = function() {
-	this.onLoadPredefined("default");
+	this.onLoadPredefined("radial");
 };
 
 ProjectMenuController.prototype.onLoadPredefined = function(name) {
