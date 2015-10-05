@@ -1032,7 +1032,11 @@ function AngularVelocityMenu() {
 		rows: [
 			this.checkbox("Enabled: ", {id: "angular_velocity_enable", value: 0}),
 			this.rangedSlider("degrees", "Degrees/sec:"),
-			this.rangedSlider("degrees_variance", "Degrees variance/sec:")
+			this.rangedSlider("degrees_variance", "Degrees variance/sec:"),
+			this.rangedSlider("max_radius", "Max radius:"),
+			this.rangedSlider("max_radius_variance", "Max radius variance:"),
+			this.rangedSlider("min_radius", "Min radius:"),
+			this.rangedSlider("min_radius_variance", "Min radius variance:")
 		]
 	};
 }
@@ -1043,8 +1047,8 @@ AngularVelocityMenu.prototype.rangedSlider = function(id, label) {
 	var slider = this.slider(label, {
 		id: id,
 		labelWidth: 30,
-		min: -500,
-		max: 500,
+		min: -1000,
+		max: 1000,
 		step: 0.01,
 		value: 0
 	});
@@ -1054,20 +1058,14 @@ AngularVelocityMenu.prototype.rangedSlider = function(id, label) {
 
 AngularVelocityMenu.prototype.onMenuCreated = function() {
 	this.bind("degrees", "degrees");
-	this.bind("degrees", "degreesVariance");
-	//this.bind("position_variance_x", "x", this.getPositionVariance);
-	//this.bind("position_variance_y", "y", this.getPositionVariance);
-	//
-	//this.bind("velocity_x", "x", this.getVelocity);
-	//this.bind("velocity_y", "y", this.getVelocity);
-	//this.bind("velocity_variance_x", "x", this.getVelocityVariance);
-	//this.bind("velocity_variance_y", "y", this.getVelocityVariance);
-	//
-	//this.bind("acceleration_x", "x", this.getAcceleration);
-	//this.bind("acceleration_y", "y", this.getAcceleration);
-	//this.bind("acceleration_variance_x", "x", this.getAccelerationVariance);
-	//this.bind("acceleration_variance_y", "y", this.getAccelerationVariance);
-	//
+	this.bind("degrees_variance", "degreesVariance");
+
+	this.bind("max_radius", "maxRadius");
+	this.bind("max_radius_variance", "maxRadiusVariance");
+
+	this.bind("min_radius", "minRadius");
+	this.bind("min_radius_variance", "minRadiusVariance");
+
 	$$("angular_velocity_enable").attachEvent("onChange", this.onEnableChanged);
 	service.msg.on("emitter/changed", this.onEmitterChanged);
 };
