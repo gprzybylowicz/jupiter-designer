@@ -26,11 +26,10 @@ LifeMenu.prototype.onMenuCreated = function() {
 
 	service.msg.emit("behaviour/setEnable", true, this.getBehaviour());
 
-
 };
 
 LifeMenu.prototype.getBehaviour = function() {
-	return behaviourModel.getBehaviourByName("LifeBehaviour");
+	return behaviourModel.getBehaviourByName(jupiter.BehaviourNames.LIFE_BEHAVIOUR);
 };
 
 module.exports = LifeMenu;

@@ -21,6 +21,8 @@ window.addEventListener("load", function() {
 	PIXI.loader.once("complete", onLoaded);
 	PIXI.loader.load();
 
+
+	console.log(jupiter);
 	function onLoaded() {
 		texturesModel.setDefaultTexture();
 		var mainView = new MainView();
@@ -1194,7 +1196,7 @@ ColorMenu.prototype.getEndVariance = function() {
 };
 
 ColorMenu.prototype.getBehaviour = function() {
-	return behaviourModel.getBehaviourByName("ColorBehaviour");
+	return behaviourModel.getBehaviourByName(jupiter.BehaviourNames.COLOR_BEHAVIOUR);
 };
 
 module.exports = ColorMenu;
@@ -1292,11 +1294,10 @@ LifeMenu.prototype.onMenuCreated = function() {
 
 	service.msg.emit("behaviour/setEnable", true, this.getBehaviour());
 
-
 };
 
 LifeMenu.prototype.getBehaviour = function() {
-	return behaviourModel.getBehaviourByName("LifeBehaviour");
+	return behaviourModel.getBehaviourByName(jupiter.BehaviourNames.LIFE_BEHAVIOUR);
 };
 
 module.exports = LifeMenu;
@@ -1482,7 +1483,7 @@ PositionMenu.prototype.getAccelerationVariance = function() {
 };
 
 PositionMenu.prototype.getBehaviour = function() {
-	return behaviourModel.getBehaviourByName("PositionBehaviour");
+	return behaviourModel.getBehaviourByName(jupiter.BehaviourNames.POSITION_BEHAVIOUR);
 };
 
 module.exports = PositionMenu;
@@ -1650,7 +1651,7 @@ SizeMenu.prototype.getSizeEnd = function() {
 };
 
 SizeMenu.prototype.getBehaviour = function() {
-	return behaviourModel.getBehaviourByName("SizeBehaviour");
+	return behaviourModel.getBehaviourByName(jupiter.BehaviourNames.SIZE_BEHAVIOUR);
 };
 
 module.exports = SizeMenu;

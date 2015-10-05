@@ -129,7 +129,7 @@ ColorMenu.prototype.getEndVariance = function() {
 };
 
 ColorMenu.prototype.getBehaviour = function() {
-	return behaviourModel.getBehaviourByName("ColorBehaviour");
+	return behaviourModel.getBehaviourByName(jupiter.BehaviourNames.COLOR_BEHAVIOUR);
 };
 
 module.exports = ColorMenu;

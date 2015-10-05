@@ -113,7 +113,7 @@ PositionMenu.prototype.getAccelerationVariance = function() {
 };
 
 PositionMenu.prototype.getBehaviour = function() {
-	return behaviourModel.getBehaviourByName("PositionBehaviour");
+	return behaviourModel.getBehaviourByName(jupiter.BehaviourNames.POSITION_BEHAVIOUR);
 };
 
 module.exports = PositionMenu;
