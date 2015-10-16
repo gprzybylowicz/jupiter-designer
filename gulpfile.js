@@ -16,6 +16,7 @@ var runSequence = require('run-sequence');
 var connect = require('gulp-connect');
 
 var options = minimist(process.argv.slice(2));
+var buildConfig = require("./build/config.json");
 
 gulp.task("clean", function() {
 	del(["bin/*"]);
@@ -66,8 +67,15 @@ gulp.task("mocha", ["browserify:test"], function() {
 		}));
 });
 
+gulp.task("copy_jupiter", function() {
+	//todo: check if jupiter path exists
+	return gulp
+		.src(buildConfig.jupiter)
+		.pipe(gulp.dest("./lib"))
+});
+
 gulp.task("build", function(done) {
-	runSequence("clean", "browserify:designer", done);
+	runSequence("clean", "copy_jupiter", "browserify:designer", done);
 });
 
 gulp.task("test", ["mocha"]);
@@ -79,11 +87,22 @@ gulp.task("test-watch", function() {
 });
 
 gulp.task('connect', function() {
-
-	watch(["./src/**/*.js", "./assets/**/*", "./lib/**/**"], function() {
-		gulp.start("browserify:designer");
-	});
 	connect.server({
 		port: 8888
 	});
+	
+	watch([buildConfig.jupiter], function() {
+		runSequence("copy_jupiter", function() {
+			connect.reload();
+		});
+	});
+
+	watch(["./src/**/*.js", "./assets/**/*", "./lib/**/**"], function() {
+		//gulp.start("browserify:designer");
+
+		runSequence("browserify", function() {
+			connect.reload();
+		});
+	});
+
 });
