@@ -20,6 +20,8 @@ window.addEventListener("load", function() {
 	PIXI.loader.once("complete", onLoaded);
 	PIXI.loader.load();
 
+
+	console.log(jupiter);
 	function onLoaded() {
 		texturesModel.setDefaultTexture();
 		var mainView = new MainView();

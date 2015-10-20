@@ -79,7 +79,7 @@ SizeMenu.prototype.getSizeEnd = function() {
 };
 
 SizeMenu.prototype.getBehaviour = function() {
-	return behaviourModel.getBehaviourByName("SizeBehaviour");
+	return behaviourModel.getBehaviourByName(jupiter.BehaviourNames.SIZE_BEHAVIOUR);
 };
 
 module.exports = SizeMenu;

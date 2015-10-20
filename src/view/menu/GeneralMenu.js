@@ -1,5 +1,6 @@
 var SubMenu = require("./SubMenu.js");
 var LifeMenu = require("./LifeMenu.js");
+var EmitDirectionMenu = require("./EmitDirectionMenu.js");
 var util = require("../../util");
 var service = require("../../service");
 var projectModel = require("../../model").projectModel;
@@ -9,6 +10,7 @@ function GeneralMenu() {
 	util.bind(this);
 
 	this.lifeMenu = new LifeMenu();
+	this.emitDirectionMenu = new EmitDirectionMenu();
 
 	this.ui = {
 		rows: [
@@ -20,8 +22,8 @@ function GeneralMenu() {
 			{id: "duration", view: "text", value: -1, label: "Duration", labelAlign: "left"},
 			this.section("Life:"),
 			this.lifeMenu.ui,
-			this.section("Emission Angle:"),
-
+			this.section("Emission direction:"),
+			this.emitDirectionMenu.ui,
 		]
 
 	};
@@ -32,6 +34,7 @@ util.inherit(GeneralMenu, SubMenu);
 GeneralMenu.prototype.onActive = function() {
 	SubMenu.prototype.onActive.call(this);
 	this.lifeMenu.onActive();
+	this.emitDirectionMenu.onActive();
 };
 
 GeneralMenu.prototype.onMenuCreated = function() {
