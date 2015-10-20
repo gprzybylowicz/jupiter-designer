@@ -100,7 +100,7 @@ gulp.task('connect', function() {
 	watch(["./src/**/*.js", "./assets/**/*", "./lib/**/**"], function() {
 		//gulp.start("browserify:designer");
 
-		runSequence("browserify", function() {
+		runSequence("browserify:designer", function() {
 			connect.reload();
 		});
 	});
