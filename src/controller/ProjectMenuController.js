@@ -3,6 +3,7 @@ var service = require("../service");
 var projectModel = require("../model").projectModel;
 var predefinedModel = require("../model").predefinedModel;
 var behaviourModel = require("../model").behaviourModel;
+var emissionModel = require("../model").emissionModel;
 var texturesModel = require("../model").texturesModel;
 var backgroundModel = require("../model").backgroundModel;
 
@@ -13,7 +14,8 @@ function ProjectMenuController() {
 	service.msg.on("project/loadConfig", this.onLoadConfig, this);
 	service.msg.on("project/loadPredefined", this.onLoadPredefined, this);
 
-	projectModel.on("emitterConfig/changed", this.refreshBehaviours);
+	projectModel.on("emitterConfig/changed", this.onEmitterConfigChanged, this);
+	projectModel.on("emitterConfig/changed", this.refreshEmitController, this);
 }
 
 ProjectMenuController.prototype.onLoadProject = function() {
@@ -63,7 +65,11 @@ ProjectMenuController.prototype.reset = function() {
 
 ProjectMenuController.prototype.onLoadPredefined = function(name) {
 	this.loadProject(predefinedModel.getByName(name));
-	//projectModel.setEmitterConfig(predefinedModel.getByName(name));
+};
+ProjectMenuController.prototype.onEmitterConfigChanged = function() {
+	this.refreshBehaviours();
+	this.refreshEmitController();
+	service.msg.emit("emitter/changed");
 };
 
 ProjectMenuController.prototype.refreshBehaviours = function() {
@@ -71,7 +77,10 @@ ProjectMenuController.prototype.refreshBehaviours = function() {
 	for (var i = 0; i < behaviours.length; i++) {
 		behaviourModel.addBehaviour(behaviours[i]);
 	}
-	service.msg.emit("emitter/changed");
+};
+
+ProjectMenuController.prototype.refreshEmitController = function() {
+	emissionModel.addEmission(projectModel.emitter.emitController);
 };
 
 module.exports = ProjectMenuController;

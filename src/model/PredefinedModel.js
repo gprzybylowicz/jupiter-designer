@@ -23,7 +23,9 @@ PredefinedModel.prototype.getConfigUrls = function() {
 		"assets/config/default.jup",
 		"assets/config/firework.jup",
 		"assets/config/green_chaos.jup",
-		"assets/config/radial.jup"
+		"assets/config/radial.jup",
+		"assets/config/random_emit_test.jup",
+		"assets/config/radial_test_2.jup",
 	];
 };
 
