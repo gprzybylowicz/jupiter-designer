@@ -32,7 +32,7 @@ window.addEventListener("load", function() {
 
 
 
-},{"./model":15,"./view":26}],2:[function(require,module,exports){
+},{"./model":17,"./view":28}],2:[function(require,module,exports){
 'use strict';
 
 //
@@ -329,7 +329,7 @@ BackgroundMenuController.prototype.onRemoveTexture = function() {
 	backgroundModel.texture = null;
 };
 module.exports = BackgroundMenuController;
-},{"../model":15,"../service":17}],4:[function(require,module,exports){
+},{"../model":17,"../service":19}],4:[function(require,module,exports){
 var projectModel = require("../model").projectModel;
 var service = require("../service");
 var util = require("../util");
@@ -368,12 +368,40 @@ BehaviourController.prototype.disableBehaviour = function(behaviour) {
 
 module.exports = BehaviourController;
 
-},{"../model":15,"../service":17,"../util":19}],5:[function(require,module,exports){
+},{"../model":17,"../service":19,"../util":21}],5:[function(require,module,exports){
+var projectModel = require("../model").projectModel;
+var emissionModel = require("../model").emissionModel;
+var service = require("../service");
+var util = require("../util");
+
+function EmissionController() {
+	util.bind(this);
+	service.msg.on("emission/change", this.onEmissionChanged);
+
+	this.setEmissionByName(jupiter.EmissionTypes.DEFAULT);
+}
+
+EmissionController.prototype.onEmissionChanged = function(name) {
+	if (projectModel.emitter.emitController.getName() !== name) {
+		this.setEmissionByName(name);
+	}
+};
+
+EmissionController.prototype.setEmissionByName = function(name) {
+	var newController = emissionModel.getEmissionByName(name);
+	projectModel.emitter.emitController = newController;
+	projectModel.emitter.reset();
+};
+
+module.exports = EmissionController;
+
+},{"../model":17,"../service":19,"../util":21}],6:[function(require,module,exports){
 var file = require("../service").file;
 var service = require("../service");
 var projectModel = require("../model").projectModel;
 var predefinedModel = require("../model").predefinedModel;
 var behaviourModel = require("../model").behaviourModel;
+var emissionModel = require("../model").emissionModel;
 var texturesModel = require("../model").texturesModel;
 var backgroundModel = require("../model").backgroundModel;
 
@@ -384,7 +412,8 @@ function ProjectMenuController() {
 	service.msg.on("project/loadConfig", this.onLoadConfig, this);
 	service.msg.on("project/loadPredefined", this.onLoadPredefined, this);
 
-	projectModel.on("emitterConfig/changed", this.refreshBehaviours);
+	projectModel.on("emitterConfig/changed", this.onEmitterConfigChanged, this);
+	projectModel.on("emitterConfig/changed", this.refreshEmitController, this);
 }
 
 ProjectMenuController.prototype.onLoadProject = function() {
@@ -434,7 +463,11 @@ ProjectMenuController.prototype.reset = function() {
 
 ProjectMenuController.prototype.onLoadPredefined = function(name) {
 	this.loadProject(predefinedModel.getByName(name));
-	//projectModel.setEmitterConfig(predefinedModel.getByName(name));
+};
+ProjectMenuController.prototype.onEmitterConfigChanged = function() {
+	this.refreshBehaviours();
+	this.refreshEmitController();
+	service.msg.emit("emitter/changed");
 };
 
 ProjectMenuController.prototype.refreshBehaviours = function() {
@@ -442,11 +475,14 @@ ProjectMenuController.prototype.refreshBehaviours = function() {
 	for (var i = 0; i < behaviours.length; i++) {
 		behaviourModel.addBehaviour(behaviours[i]);
 	}
-	service.msg.emit("emitter/changed");
+};
+
+ProjectMenuController.prototype.refreshEmitController = function() {
+	emissionModel.addEmission(projectModel.emitter.emitController);
 };
 
 module.exports = ProjectMenuController;
-},{"../model":15,"../service":17}],6:[function(require,module,exports){
+},{"../model":17,"../service":19}],7:[function(require,module,exports){
 var service = require("../service");
 var texturesModel = require("../model").texturesModel;
 
@@ -475,19 +511,21 @@ TextureMenuController.prototype.onUploadTexture = function() {
 };
 
 module.exports = TextureMenuController;
-},{"../model":15,"../service":17}],7:[function(require,module,exports){
+},{"../model":17,"../service":19}],8:[function(require,module,exports){
 var ProjectMenuController = require("./ProjectMenuController.js");
 var TextureMenuController = require("./TextureMenuController.js");
 var BackgroundMenuController = require("./BackgroundMenuController.js");
 var BehaviourController = require("./BehaviourController.js");
+var EmissionController = require("./EmissionController.js");
 
 module.exports = {
 	projectMenuController: new ProjectMenuController(),
 	textureMenuController: new TextureMenuController(),
 	backgroundMenuController: new BackgroundMenuController(),
-	behaviourController: new BehaviourController()
+	behaviourController: new BehaviourController(),
+	emissionController: new EmissionController()
 };
-},{"./BackgroundMenuController.js":3,"./BehaviourController.js":4,"./ProjectMenuController.js":5,"./TextureMenuController.js":6}],8:[function(require,module,exports){
+},{"./BackgroundMenuController.js":3,"./BehaviourController.js":4,"./EmissionController.js":5,"./ProjectMenuController.js":6,"./TextureMenuController.js":7}],9:[function(require,module,exports){
 var Model = require("./Model.js");
 var util = require("../util");
 
@@ -525,7 +563,7 @@ BackgroundModel.prototype.deserialize = function(data) {
 };
 
 module.exports = BackgroundModel;
-},{"../util":19,"./Model.js":10}],9:[function(require,module,exports){
+},{"../util":21,"./Model.js":12}],10:[function(require,module,exports){
 function BehaviourModel() {
 
 	this.behaviours = {};
@@ -555,7 +593,37 @@ BehaviourModel.prototype.getBehaviourByName = function(name) {
 };
 
 module.exports = BehaviourModel;
-},{}],10:[function(require,module,exports){
+},{}],11:[function(require,module,exports){
+function EmissionModel() {
+
+	this.emissions = {};
+
+	for (var key in jupiter.EmissionTypes) {
+		var name = jupiter.EmissionTypes[key];
+		this.addEmission(new jupiter[name]);
+	}
+
+}
+
+EmissionModel.prototype.addEmission = function(emission) {
+	if (this.emissions[emission.getName()]) {
+		this.emissions[emission.getName()] = null;
+		delete this.emissions[emission.getName()];
+	}
+
+	this.emissions[emission.getName()] = emission;
+};
+
+EmissionModel.prototype.getEmissionByName = function(name) {
+	if (!this.emissions[name]) {
+		throw new Error("No behaviour by given name = " + name);
+	}
+
+	return this.emissions[name];
+};
+
+module.exports = EmissionModel;
+},{}],12:[function(require,module,exports){
 var EventEmitter = require("eventemitter3");
 var util = require("../util");
 
@@ -587,7 +655,7 @@ Model.prototype.property = function(property, defaultValue) {
 };
 
 module.exports = Model;
-},{"../util":19,"eventemitter3":2}],11:[function(require,module,exports){
+},{"../util":21,"eventemitter3":2}],13:[function(require,module,exports){
 function ParticleModel(){
 	this.texture = null;
 	this.name = null;
@@ -596,7 +664,7 @@ function ParticleModel(){
 
 
 module.exports = ParticleModel;
-},{}],12:[function(require,module,exports){
+},{}],14:[function(require,module,exports){
 function PredefinedModel() {
 	this.configs = {};
 }
@@ -622,12 +690,14 @@ PredefinedModel.prototype.getConfigUrls = function() {
 		"assets/config/default.jup",
 		"assets/config/firework.jup",
 		"assets/config/green_chaos.jup",
-		"assets/config/radial.jup"
+		"assets/config/radial.jup",
+		"assets/config/random_emit_test.jup",
+		"assets/config/radial_test_2.jup",
 	];
 };
 
 module.exports = PredefinedModel;
-},{}],13:[function(require,module,exports){
+},{}],15:[function(require,module,exports){
 var Model = require("./Model.js");
 var util = require("../util");
 
@@ -680,7 +750,7 @@ Object.defineProperty(ProjectModel.prototype, "markerPositionInStageCoordinates"
 	}
 });
 module.exports = ProjectModel;
-},{"../util":19,"./Model.js":10}],14:[function(require,module,exports){
+},{"../util":21,"./Model.js":12}],16:[function(require,module,exports){
 var Model = require("./Model.js");
 var util = require("../util");
 
@@ -751,13 +821,14 @@ TexturesModel.prototype.deserialize = function(data) {
 };
 
 module.exports = TexturesModel;
-},{"../util":19,"./Model.js":10}],15:[function(require,module,exports){
+},{"../util":21,"./Model.js":12}],17:[function(require,module,exports){
 var ProjectModel = require("./ProjectModel.js");
 var BackgroundModel = require("./BackgroundModel.js");
 var ParticleModel = require("./ParticleModel.js");
 var BehaviourModel = require("./BehaviourModel.js");
 var PredefinedModel = require("./PredefinedModel.js");
 var TexturesModel = require("./TexturesModel.js");
+var EmissionModel = require("./EmissionModel.js");
 
 module.exports = {
 	projectModel: new ProjectModel(),
@@ -765,9 +836,10 @@ module.exports = {
 	behaviourModel: new BehaviourModel(),
 	predefinedModel: new PredefinedModel(),
 	texturesModel: new TexturesModel(),
-	backgroundModel: new BackgroundModel()
+	backgroundModel: new BackgroundModel(),
+	emissionModel: new EmissionModel()
 };
-},{"./BackgroundModel.js":8,"./BehaviourModel.js":9,"./ParticleModel.js":11,"./PredefinedModel.js":12,"./ProjectModel.js":13,"./TexturesModel.js":14}],16:[function(require,module,exports){
+},{"./BackgroundModel.js":9,"./BehaviourModel.js":10,"./EmissionModel.js":11,"./ParticleModel.js":13,"./PredefinedModel.js":14,"./ProjectModel.js":15,"./TexturesModel.js":16}],18:[function(require,module,exports){
 function FileService() {
 
 }
@@ -783,7 +855,7 @@ FileService.prototype.saveAs = function(name, data) {
 };
 
 module.exports = FileService;
-},{}],17:[function(require,module,exports){
+},{}],19:[function(require,module,exports){
 var FileService = require("./FileService.js");
 var EventEmitter = require("eventemitter3");
 
@@ -791,7 +863,7 @@ module.exports = {
 	msg: new EventEmitter(),
 	file: new FileService()
 };
-},{"./FileService.js":16,"eventemitter3":2}],18:[function(require,module,exports){
+},{"./FileService.js":18,"eventemitter3":2}],20:[function(require,module,exports){
 module.exports = function(scope) {
 	for (var i in scope) {
 		if (typeof scope[i] === "function") {
@@ -799,17 +871,17 @@ module.exports = function(scope) {
 		}
 	}
 };
-},{}],19:[function(require,module,exports){
+},{}],21:[function(require,module,exports){
 module.exports = {
 	inherit: require("./inherit.js"),
 	bind: require("./bind.js")
 };
-},{"./bind.js":18,"./inherit.js":20}],20:[function(require,module,exports){
+},{"./bind.js":20,"./inherit.js":22}],22:[function(require,module,exports){
 module.exports = function(childClass, baseClass) {
 	childClass.prototype = Object.create(baseClass.prototype);
 	childClass.prototype.constructor = childClass;
 };
-},{}],21:[function(require,module,exports){
+},{}],23:[function(require,module,exports){
 var Menu = require("./menu/Menu.js");
 var ParticleView = require("./ParticleView.js");
 var Stage = require("./stage/Stage.js");
@@ -870,7 +942,7 @@ MainView.prototype.draw = function() {
 };
 
 module.exports = MainView;
-},{"../model":15,"../service":17,"./ParticleView.js":23,"./menu/Menu.js":33,"./stage/Stage.js":40}],22:[function(require,module,exports){
+},{"../model":17,"../service":19,"./ParticleView.js":25,"./menu/Menu.js":36,"./stage/Stage.js":45}],24:[function(require,module,exports){
 var util = require("../util");
 var service = require("../service");
 
@@ -926,7 +998,7 @@ Marker.prototype.onMouseOutStage = function() {
 };
 
 module.exports = Marker;
-},{"../service":17,"../util":19}],23:[function(require,module,exports){
+},{"../service":19,"../util":21}],25:[function(require,module,exports){
 var util = require("../util");
 var service = require("../service");
 var projectModel = require("../model").projectModel;
@@ -968,11 +1040,11 @@ ParticleView.prototype.onComplete = function() {
 module.exports = ParticleView;
 
 
-},{"../model":15,"../service":17,"../util":19}],24:[function(require,module,exports){
+},{"../model":17,"../service":19,"../util":21}],26:[function(require,module,exports){
 module.exports = {
 	slider: require("./slider.js")
 };
-},{"./slider.js":25}],25:[function(require,module,exports){
+},{"./slider.js":27}],27:[function(require,module,exports){
 module.exports = function(title, style) {
 	style = style || {};
 
@@ -1012,12 +1084,12 @@ module.exports = function(title, style) {
 
 	return style;
 };
-},{}],26:[function(require,module,exports){
+},{}],28:[function(require,module,exports){
 module.exports = {
 	menu: require("./menu"),
 	MainView: require("./MainView.js")
 };
-},{"./MainView.js":21,"./menu":39}],27:[function(require,module,exports){
+},{"./MainView.js":23,"./menu":44}],29:[function(require,module,exports){
 var SubMenu = require("./SubMenu.js");
 var inherit = require("../../util").inherit;
 var bind = require("../../util").bind;
@@ -1087,7 +1159,7 @@ module.exports = AngularVelocityMenu;
 
 
 
-},{"../../model":15,"../../service":17,"../../util":19,"./SubMenu.js":37}],28:[function(require,module,exports){
+},{"../../model":17,"../../service":19,"../../util":21,"./SubMenu.js":42}],30:[function(require,module,exports){
 var SubMenu = require("./SubMenu.js");
 var util = require("../../util");
 var service = require("../../service");
@@ -1137,7 +1209,7 @@ BackgroundMenu.prototype.onLockChanged = function() {
 	service.msg.emit("background/changeLocked");
 };
 module.exports = BackgroundMenu;
-},{"../../model":15,"../../service":17,"../../util":19,"./SubMenu.js":37}],29:[function(require,module,exports){
+},{"../../model":17,"../../service":19,"../../util":21,"./SubMenu.js":42}],31:[function(require,module,exports){
 var SubMenu = require("./SubMenu.js");
 var util = require("../../util");
 var behaviourModel = require("../../model").behaviourModel;
@@ -1276,7 +1348,53 @@ module.exports = ColorMenu;
 
 
 
-},{"../../model":15,"../../service":17,"../../util":19,"./SubMenu.js":37}],30:[function(require,module,exports){
+},{"../../model":17,"../../service":19,"../../util":21,"./SubMenu.js":42}],32:[function(require,module,exports){
+var SubMenu = require("./SubMenu.js");
+var util = require("../../util");
+var service = require("../../service");
+var emissionModel = require("../../model").emissionModel;
+
+function DefaultEmissionMenu() {
+	SubMenu.call(this);
+	util.bind(this);
+
+	this.ui = {
+		id: "default_emit_controller_menu",
+		rows: [
+			this.counter("Emit/sec:", {
+				id: "emit_per_second",
+				step: 0.1, value: 0, min: 0, max: 200, align: "center", format: webix.i18n.numberFormat
+			})
+		]
+	};
+}
+
+util.inherit(DefaultEmissionMenu, SubMenu);
+
+DefaultEmissionMenu.prototype.onActive = function() {
+	this.onEmitterChanged();
+
+	$$("emit_per_second").attachEvent("onChange", this.onEmitPerSecondChanged);
+};
+
+DefaultEmissionMenu.prototype.onDestroy = function() {
+	$$("emit_per_second").detachEvent("onChange", this.onEmitPerSecondChanged);
+};
+
+DefaultEmissionMenu.prototype.onEmitPerSecondChanged = function(value) {
+	this.getController().emitPerSecond = value;
+};
+
+DefaultEmissionMenu.prototype.onEmitterChanged = function() {
+	$$("emit_per_second").setValue(this.getController().emitPerSecond);
+};
+
+DefaultEmissionMenu.prototype.getController = function() {
+	return emissionModel.getEmissionByName(jupiter.EmissionTypes.DEFAULT);
+};
+
+module.exports = DefaultEmissionMenu;
+},{"../../model":17,"../../service":19,"../../util":21,"./SubMenu.js":42}],33:[function(require,module,exports){
 var SubMenu = require("./SubMenu.js");
 var util = require("../../util");
 var service = require("../../service");
@@ -1324,10 +1442,13 @@ EmitDirectionMenu.prototype.getBehaviour = function() {
 };
 
 module.exports = EmitDirectionMenu;
-},{"../../model":15,"../../service":17,"../../util":19,"./SubMenu.js":37}],31:[function(require,module,exports){
+},{"../../model":17,"../../service":19,"../../util":21,"./SubMenu.js":42}],34:[function(require,module,exports){
 var SubMenu = require("./SubMenu.js");
 var LifeMenu = require("./LifeMenu.js");
 var EmitDirectionMenu = require("./EmitDirectionMenu.js");
+var DefaultEmissionMenu = require("./DefaultEmissionMenu.js");
+var RandomEmissionMenu = require("./RandomEmissionMenu.js");
+var StandardEmissionMenu = require("./StandardEmissionMenu.js");
 var util = require("../../util");
 var service = require("../../service");
 var projectModel = require("../../model").projectModel;
@@ -1338,25 +1459,64 @@ function GeneralMenu() {
 
 	this.lifeMenu = new LifeMenu();
 	this.emitDirectionMenu = new EmitDirectionMenu();
+	this.emissionMenus = this.getEmissionMenus();
+	this.currentControllerMenu = null;
 
 	this.ui = {
 		rows: [
-			this.section("Emitter:"),
-			this.counter("Emit/sec:", {
-				id: "emit_per_second",
-				step: 0.1, value: 20, min: 0, max: 200, align: "center", format: webix.i18n.numberFormat
-			}),
+			this.section("Emission type:"),
+			this.getEmissionMenu(),
+			this.section("Duration:"),
 			{id: "duration", view: "text", value: -1, label: "Duration", labelAlign: "left"},
 			this.section("Life:"),
 			this.lifeMenu.ui,
 			this.section("Emission direction:"),
-			this.emitDirectionMenu.ui,
+			this.emitDirectionMenu.ui
 		]
-
 	};
 }
 
 util.inherit(GeneralMenu, SubMenu);
+
+GeneralMenu.prototype.getEmissionMenus = function() {
+	return [
+		{name: jupiter.EmissionTypes.DEFAULT, menu: new DefaultEmissionMenu()},
+		{name: jupiter.EmissionTypes.RANDOM, menu: new RandomEmissionMenu()},
+		{name: jupiter.EmissionTypes.UNIFORM, menu: new StandardEmissionMenu()}
+	];
+};
+
+GeneralMenu.prototype.getEmissionNames = function() {
+	return this.getEmissionMenus().map(function(menu) {
+		return menu.name;
+	});
+};
+
+GeneralMenu.prototype.getEmitControllerMenuByName = function(name) {
+	var index = this.getEmissionNames().indexOf(name);
+	return this.getEmissionMenus()[index].menu;
+};
+
+GeneralMenu.prototype.getEmissionMenu = function() {
+	return {
+		view: "menu",
+		id: "emission_menu",
+		subMenuPos: "right",
+		layout: "y",
+		height: 30,
+
+		data: [{
+			id: "emission_menu_item",
+			value: "Select emit settings",
+			submenu: this.getEmissionNames(true),
+			config: {
+				width: 200,
+				on: {onItemClick: this.setEmissionMenu}
+			}
+		}],
+		type: {subsign: true, height: 50,}
+	};
+};
 
 GeneralMenu.prototype.onActive = function() {
 	SubMenu.prototype.onActive.call(this);
@@ -1365,31 +1525,45 @@ GeneralMenu.prototype.onActive = function() {
 };
 
 GeneralMenu.prototype.onMenuCreated = function() {
-	$$("emit_per_second").attachEvent("onChange", this.onEmitPerSecondChanged);
+	this.setEmissionMenu(this.getEmissionNames()[0]);
+
 	$$("duration").attachEvent("onChange", this.onDurationChanged);
 	service.msg.on("emitter/changed", this.onEmitterChanged);
 };
 
-GeneralMenu.prototype.onEmitPerSecondChanged = function(value) {
-	projectModel.emitter.emitController.emitPerSecond = value;
+GeneralMenu.prototype.setEmissionMenu = function(name) {
+	if (this.currentControllerMenu) {
+		this.currentControllerMenu.onDestroy();
+		$$(this.ui.id).removeView(this.currentControllerMenu.ui.id);
+	}
+
+	this.currentControllerMenu = this.getEmitControllerMenuByName(name);
+	$$(this.ui.id).addView(this.currentControllerMenu.ui, 2);
+	this.currentControllerMenu.onActive();
+	$$("emission_menu").getMenuItem("emission_menu_item").value = name;
+	$$("emission_menu").refresh();
+	this.onActive();
+
+	service.msg.emit("emission/change", name);
+
 };
 
 GeneralMenu.prototype.onDurationChanged = function(value) {
 	value = parseFloat(value);
 	if (!isNaN(value)) {
-		projectModel.emitter.emitController.duration = value;
+		projectModel.emitter.duration.maxTime = value;
 	}
 
-	$$("duration").setValue(projectModel.emitter.emitController.duration);
+	$$("duration").setValue(projectModel.emitter.duration.maxTime);
 };
 
 GeneralMenu.prototype.onEmitterChanged = function() {
-	$$("emit_per_second").setValue(projectModel.emitter.emitController.emitPerSecond);
-	$$("duration").setValue(projectModel.emitter.emitController.duration);
+	$$("duration").setValue(projectModel.emitter.duration.maxTime);
+	this.setEmissionMenu(projectModel.emitter.emitController.getName());
 };
 
 module.exports = GeneralMenu;
-},{"../../model":15,"../../service":17,"../../util":19,"./EmitDirectionMenu.js":30,"./LifeMenu.js":32,"./SubMenu.js":37}],32:[function(require,module,exports){
+},{"../../model":17,"../../service":19,"../../util":21,"./DefaultEmissionMenu.js":32,"./EmitDirectionMenu.js":33,"./LifeMenu.js":35,"./RandomEmissionMenu.js":39,"./StandardEmissionMenu.js":41,"./SubMenu.js":42}],35:[function(require,module,exports){
 var SubMenu = require("./SubMenu.js");
 var util = require("../../util");
 var service = require("../../service");
@@ -1425,7 +1599,7 @@ LifeMenu.prototype.getBehaviour = function() {
 };
 
 module.exports = LifeMenu;
-},{"../../model":15,"../../service":17,"../../util":19,"./SubMenu.js":37}],33:[function(require,module,exports){
+},{"../../model":17,"../../service":19,"../../util":21,"./SubMenu.js":42}],36:[function(require,module,exports){
 var ProjectMenu = require("./ProjectMenu.js");
 var TextureMenu = require("./TextureMenu.js");
 var BackgroundMenu = require("./BackgroundMenu.js");
@@ -1492,7 +1666,7 @@ Menu.prototype.onMenuItemClick = function(id) {
 	item.view.onActive();
 };
 module.exports = Menu;
-},{"../../service":17,"./AngularVelocityMenu.js":27,"./BackgroundMenu.js":28,"./ColorMenu.js":29,"./GeneralMenu.js":31,"./PositionMenu.js":34,"./ProjectMenu.js":35,"./SizeMenu.js":36,"./TextureMenu.js":38}],34:[function(require,module,exports){
+},{"../../service":19,"./AngularVelocityMenu.js":29,"./BackgroundMenu.js":30,"./ColorMenu.js":31,"./GeneralMenu.js":34,"./PositionMenu.js":37,"./ProjectMenu.js":38,"./SizeMenu.js":40,"./TextureMenu.js":43}],37:[function(require,module,exports){
 var SubMenu = require("./SubMenu.js");
 var inherit = require("../../util").inherit;
 var bind = require("../../util").bind;
@@ -1615,7 +1789,7 @@ module.exports = PositionMenu;
 
 
 
-},{"../../model":15,"../../service":17,"../../util":19,"./SubMenu.js":37}],35:[function(require,module,exports){
+},{"../../model":17,"../../service":19,"../../util":21,"./SubMenu.js":42}],38:[function(require,module,exports){
 var controller = require("../../controller").projectMenuController;
 var util = require("../../util");
 var service = require("../../service");
@@ -1694,7 +1868,67 @@ ProjectMenu.prototype.onPredefinedClick = function(id) {
 };
 
 module.exports = ProjectMenu;
-},{"../../controller":7,"../../model":15,"../../service":17,"../../util":19}],36:[function(require,module,exports){
+},{"../../controller":8,"../../model":17,"../../service":19,"../../util":21}],39:[function(require,module,exports){
+var SubMenu = require("./SubMenu.js");
+var util = require("../../util");
+var service = require("../../service");
+var projectModel = require("../../model").projectModel;
+var emissionModel = require("../../model").emissionModel;
+
+function RandomEmissionMenu() {
+	SubMenu.call(this);
+	util.bind(this);
+
+	this.ui = {
+		id: "random_emit_controller_menu",
+		rows: [
+			this.counter("Emission rate:", {
+				id: "emission_rate",
+				step: 1, value: 0, min: 0, max: 2000, align: "center", format: webix.i18n.numberFormat
+			}),
+			this.counter("Max particles:", {
+				id: "emission_max_particles",
+				step: 1, value: 0, min: 0, max: 2000, align: "center", format: webix.i18n.numberFormat
+			})
+		]
+	};
+}
+
+util.inherit(RandomEmissionMenu, SubMenu);
+
+RandomEmissionMenu.prototype.onActive = function() {
+	this.onEmitterChanged();
+
+	$$("emission_rate").attachEvent("onChange", this.onEmissionRateChanged);
+	$$("emission_max_particles").attachEvent("onChange", this.onMaxParticlesChanged);
+
+};
+
+RandomEmissionMenu.prototype.onDestroy = function() {
+	$$("emission_rate").detachEvent("onChange", this.onEmissionRateChanged);
+	$$("emission_max_particles").detachEvent("onChange", this.onMaxParticlesChanged);
+	service.msg.off("emitter/changed", this.onEmitterChanged);
+};
+
+RandomEmissionMenu.prototype.onEmissionRateChanged = function(value) {
+	this.getController().emissionRate = value;
+};
+
+RandomEmissionMenu.prototype.onMaxParticlesChanged = function(value) {
+	this.getController().maxParticles = value;
+};
+
+RandomEmissionMenu.prototype.onEmitterChanged = function() {
+	$$("emission_rate").setValue(this.getController().emissionRate);
+	$$("emission_max_particles").setValue(this.getController().maxParticles);
+};
+
+RandomEmissionMenu.prototype.getController = function() {
+	return emissionModel.getEmissionByName(jupiter.EmissionTypes.RANDOM);
+};
+
+module.exports = RandomEmissionMenu;
+},{"../../model":17,"../../service":19,"../../util":21,"./SubMenu.js":42}],40:[function(require,module,exports){
 var SubMenu = require("./SubMenu.js");
 var util = require("../../util");
 var behaviourModel = require("../../model").behaviourModel;
@@ -1783,7 +2017,67 @@ module.exports = SizeMenu;
 
 
 
-},{"../../model":15,"../../service":17,"../../util":19,"./SubMenu.js":37}],37:[function(require,module,exports){
+},{"../../model":17,"../../service":19,"../../util":21,"./SubMenu.js":42}],41:[function(require,module,exports){
+var SubMenu = require("./SubMenu.js");
+var util = require("../../util");
+var service = require("../../service");
+var projectModel = require("../../model").projectModel;
+var emissionModel = require("../../model").emissionModel;
+
+function StandardEmissionMenu() {
+	SubMenu.call(this);
+	util.bind(this);
+
+	this.ui = {
+		id: "standard_emit_controller_menu",
+		rows: [
+			this.counter("Emission rate:", {
+				id: "standard_emit_emission_rate",
+				step: 1, value: 0, min: 0, max: 2000, align: "center", format: webix.i18n.numberFormat
+			}),
+			this.counter("Max particles:", {
+				id: "standerd_emission_max_particles",
+				step: 1, value: 0, min: 0, max: 2000, align: "center", format: webix.i18n.numberFormat
+			})
+		]
+	};
+}
+
+util.inherit(StandardEmissionMenu, SubMenu);
+
+StandardEmissionMenu.prototype.onActive = function() {
+	this.onEmitterChanged();
+
+	$$("standard_emit_emission_rate").attachEvent("onChange", this.onEmissionRateChanged);
+	$$("standerd_emission_max_particles").attachEvent("onChange", this.onMaxParticlesChanged);
+	service.msg.on("emitter/changed", this.onEmitterChanged);
+};
+
+StandardEmissionMenu.prototype.onDestroy = function() {
+	$$("standard_emit_emission_rate").detachEvent("onChange", this.onEmissionRateChanged);
+	$$("standerd_emission_max_particles").detachEvent("onChange", this.onMaxParticlesChanged);
+	service.msg.off("emitter/changed", this.onEmitterChanged);
+};
+
+StandardEmissionMenu.prototype.onEmissionRateChanged = function(value) {
+	this.getController().emissionRate = value;
+};
+
+StandardEmissionMenu.prototype.onMaxParticlesChanged = function(value) {
+	this.getController().maxParticles = value;
+};
+
+StandardEmissionMenu.prototype.onEmitterChanged = function() {
+	$$("standard_emit_emission_rate").setValue(this.getController().emissionRate);
+	$$("standerd_emission_max_particles").setValue(this.getController().maxParticles);
+};
+
+StandardEmissionMenu.prototype.getController = function() {
+	return emissionModel.getEmissionByName(jupiter.EmissionTypes.UNIFORM);
+};
+
+module.exports = StandardEmissionMenu;
+},{"../../model":17,"../../service":19,"../../util":21,"./SubMenu.js":42}],42:[function(require,module,exports){
 var extension = require("../extension");
 var service = require("../../service");
 
@@ -1862,7 +2156,7 @@ SubMenu.prototype._setup = function(defaultStyle, extraStyle) {
 };
 
 module.exports = SubMenu;
-},{"../../service":17,"../extension":24}],38:[function(require,module,exports){
+},{"../../service":19,"../extension":26}],43:[function(require,module,exports){
 var SubMenu = require("./SubMenu.js");
 var util = require("../../util");
 var service = require("../../service");
@@ -1973,12 +2267,12 @@ function imageTemplate(obj) {
 
 
 
-},{"../../controller":7,"../../model":15,"../../service":17,"../../util":19,"./SubMenu.js":37}],39:[function(require,module,exports){
+},{"../../controller":8,"../../model":17,"../../service":19,"../../util":21,"./SubMenu.js":42}],44:[function(require,module,exports){
 module.exports = {
 	Menu: require("./Menu.js"),
 	ProjectMenu: require("./ProjectMenu.js")
 };
-},{"./Menu.js":33,"./ProjectMenu.js":35}],40:[function(require,module,exports){
+},{"./Menu.js":36,"./ProjectMenu.js":38}],45:[function(require,module,exports){
 var util = require("../../util");
 var service = require("../../service");
 var StageBackground = require("./StageBackground.js");
@@ -2023,7 +2317,7 @@ Stage.prototype.onMarkerPositionChanged = function() {
 };
 
 module.exports = Stage;
-},{"../../model":15,"../../service":17,"../../util":19,"../Marker.js":22,"./StageBackground.js":41}],41:[function(require,module,exports){
+},{"../../model":17,"../../service":19,"../../util":21,"../Marker.js":24,"./StageBackground.js":46}],46:[function(require,module,exports){
 var util = require("../../util");
 var service = require("../../service");
 var backgroundModel = require("../../model").backgroundModel;
@@ -2091,7 +2385,7 @@ StageBackground.prototype.onMouseMove = function(event) {
 };
 
 module.exports = StageBackground;
-},{"../../model":15,"../../service":17,"../../util":19}]},{},[1])
+},{"../../model":17,"../../service":19,"../../util":21}]},{},[1])
 
 
 //# sourceMappingURL=jupiter_designer.js.map
