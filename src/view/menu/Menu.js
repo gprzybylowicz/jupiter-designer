@@ -5,6 +5,7 @@ var ColorMenu = require("./ColorMenu.js");
 var AngularVelocityMenu = require("./AngularVelocityMenu.js");
 var PositionMenu = require("./PositionMenu.js");
 var SizeMenu = require("./SizeMenu.js");
+var RotationMenu = require("./RotationMenu.js");
 var GeneralMenu = require("./GeneralMenu.js");
 var service = require("../../service");
 
@@ -19,7 +20,8 @@ function Menu() {
 		{value: "Color", view: new ColorMenu()},
 		{value: "Position", view: new PositionMenu()},
 		{value: "Angular Velocity", view: new AngularVelocityMenu()},
-		{value: "Size", view: new SizeMenu()}
+		{value: "Size", view: new SizeMenu()},
+		{value: "Rotation", view: new RotationMenu()}
 	];
 
 	var menu = {
