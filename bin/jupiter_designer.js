@@ -573,6 +573,7 @@ function BehaviourModel() {
 	this.addBehaviour(new jupiter.SizeBehaviour());
 	this.addBehaviour(new jupiter.AngularVelocityBehaviour());
 	this.addBehaviour(new jupiter.EmitDirectionBehaviour());
+	this.addBehaviour(new jupiter.RotationBehaviour());
 }
 
 BehaviourModel.prototype.addBehaviour = function(behaviour) {
@@ -942,7 +943,7 @@ MainView.prototype.draw = function() {
 };
 
 module.exports = MainView;
-},{"../model":17,"../service":19,"./ParticleView.js":25,"./menu/Menu.js":36,"./stage/Stage.js":45}],24:[function(require,module,exports){
+},{"../model":17,"../service":19,"./ParticleView.js":25,"./menu/Menu.js":36,"./stage/Stage.js":46}],24:[function(require,module,exports){
 var util = require("../util");
 var service = require("../service");
 
@@ -1089,7 +1090,7 @@ module.exports = {
 	menu: require("./menu"),
 	MainView: require("./MainView.js")
 };
-},{"./MainView.js":23,"./menu":44}],29:[function(require,module,exports){
+},{"./MainView.js":23,"./menu":45}],29:[function(require,module,exports){
 var SubMenu = require("./SubMenu.js");
 var inherit = require("../../util").inherit;
 var bind = require("../../util").bind;
@@ -1159,7 +1160,7 @@ module.exports = AngularVelocityMenu;
 
 
 
-},{"../../model":17,"../../service":19,"../../util":21,"./SubMenu.js":42}],30:[function(require,module,exports){
+},{"../../model":17,"../../service":19,"../../util":21,"./SubMenu.js":43}],30:[function(require,module,exports){
 var SubMenu = require("./SubMenu.js");
 var util = require("../../util");
 var service = require("../../service");
@@ -1209,7 +1210,7 @@ BackgroundMenu.prototype.onLockChanged = function() {
 	service.msg.emit("background/changeLocked");
 };
 module.exports = BackgroundMenu;
-},{"../../model":17,"../../service":19,"../../util":21,"./SubMenu.js":42}],31:[function(require,module,exports){
+},{"../../model":17,"../../service":19,"../../util":21,"./SubMenu.js":43}],31:[function(require,module,exports){
 var SubMenu = require("./SubMenu.js");
 var util = require("../../util");
 var behaviourModel = require("../../model").behaviourModel;
@@ -1348,7 +1349,7 @@ module.exports = ColorMenu;
 
 
 
-},{"../../model":17,"../../service":19,"../../util":21,"./SubMenu.js":42}],32:[function(require,module,exports){
+},{"../../model":17,"../../service":19,"../../util":21,"./SubMenu.js":43}],32:[function(require,module,exports){
 var SubMenu = require("./SubMenu.js");
 var util = require("../../util");
 var service = require("../../service");
@@ -1394,7 +1395,7 @@ DefaultEmissionMenu.prototype.getController = function() {
 };
 
 module.exports = DefaultEmissionMenu;
-},{"../../model":17,"../../service":19,"../../util":21,"./SubMenu.js":42}],33:[function(require,module,exports){
+},{"../../model":17,"../../service":19,"../../util":21,"./SubMenu.js":43}],33:[function(require,module,exports){
 var SubMenu = require("./SubMenu.js");
 var util = require("../../util");
 var service = require("../../service");
@@ -1442,7 +1443,7 @@ EmitDirectionMenu.prototype.getBehaviour = function() {
 };
 
 module.exports = EmitDirectionMenu;
-},{"../../model":17,"../../service":19,"../../util":21,"./SubMenu.js":42}],34:[function(require,module,exports){
+},{"../../model":17,"../../service":19,"../../util":21,"./SubMenu.js":43}],34:[function(require,module,exports){
 var SubMenu = require("./SubMenu.js");
 var LifeMenu = require("./LifeMenu.js");
 var EmitDirectionMenu = require("./EmitDirectionMenu.js");
@@ -1563,7 +1564,7 @@ GeneralMenu.prototype.onEmitterChanged = function() {
 };
 
 module.exports = GeneralMenu;
-},{"../../model":17,"../../service":19,"../../util":21,"./DefaultEmissionMenu.js":32,"./EmitDirectionMenu.js":33,"./LifeMenu.js":35,"./RandomEmissionMenu.js":39,"./StandardEmissionMenu.js":41,"./SubMenu.js":42}],35:[function(require,module,exports){
+},{"../../model":17,"../../service":19,"../../util":21,"./DefaultEmissionMenu.js":32,"./EmitDirectionMenu.js":33,"./LifeMenu.js":35,"./RandomEmissionMenu.js":39,"./StandardEmissionMenu.js":42,"./SubMenu.js":43}],35:[function(require,module,exports){
 var SubMenu = require("./SubMenu.js");
 var util = require("../../util");
 var service = require("../../service");
@@ -1599,7 +1600,7 @@ LifeMenu.prototype.getBehaviour = function() {
 };
 
 module.exports = LifeMenu;
-},{"../../model":17,"../../service":19,"../../util":21,"./SubMenu.js":42}],36:[function(require,module,exports){
+},{"../../model":17,"../../service":19,"../../util":21,"./SubMenu.js":43}],36:[function(require,module,exports){
 var ProjectMenu = require("./ProjectMenu.js");
 var TextureMenu = require("./TextureMenu.js");
 var BackgroundMenu = require("./BackgroundMenu.js");
@@ -1607,6 +1608,7 @@ var ColorMenu = require("./ColorMenu.js");
 var AngularVelocityMenu = require("./AngularVelocityMenu.js");
 var PositionMenu = require("./PositionMenu.js");
 var SizeMenu = require("./SizeMenu.js");
+var RotationMenu = require("./RotationMenu.js");
 var GeneralMenu = require("./GeneralMenu.js");
 var service = require("../../service");
 
@@ -1621,7 +1623,8 @@ function Menu() {
 		{value: "Color", view: new ColorMenu()},
 		{value: "Position", view: new PositionMenu()},
 		{value: "Angular Velocity", view: new AngularVelocityMenu()},
-		{value: "Size", view: new SizeMenu()}
+		{value: "Size", view: new SizeMenu()},
+		{value: "Rotation", view: new RotationMenu()}
 	];
 
 	var menu = {
@@ -1666,7 +1669,7 @@ Menu.prototype.onMenuItemClick = function(id) {
 	item.view.onActive();
 };
 module.exports = Menu;
-},{"../../service":19,"./AngularVelocityMenu.js":29,"./BackgroundMenu.js":30,"./ColorMenu.js":31,"./GeneralMenu.js":34,"./PositionMenu.js":37,"./ProjectMenu.js":38,"./SizeMenu.js":40,"./TextureMenu.js":43}],37:[function(require,module,exports){
+},{"../../service":19,"./AngularVelocityMenu.js":29,"./BackgroundMenu.js":30,"./ColorMenu.js":31,"./GeneralMenu.js":34,"./PositionMenu.js":37,"./ProjectMenu.js":38,"./RotationMenu.js":40,"./SizeMenu.js":41,"./TextureMenu.js":44}],37:[function(require,module,exports){
 var SubMenu = require("./SubMenu.js");
 var inherit = require("../../util").inherit;
 var bind = require("../../util").bind;
@@ -1789,7 +1792,7 @@ module.exports = PositionMenu;
 
 
 
-},{"../../model":17,"../../service":19,"../../util":21,"./SubMenu.js":42}],38:[function(require,module,exports){
+},{"../../model":17,"../../service":19,"../../util":21,"./SubMenu.js":43}],38:[function(require,module,exports){
 var controller = require("../../controller").projectMenuController;
 var util = require("../../util");
 var service = require("../../service");
@@ -1928,7 +1931,66 @@ RandomEmissionMenu.prototype.getController = function() {
 };
 
 module.exports = RandomEmissionMenu;
-},{"../../model":17,"../../service":19,"../../util":21,"./SubMenu.js":42}],40:[function(require,module,exports){
+},{"../../model":17,"../../service":19,"../../util":21,"./SubMenu.js":43}],40:[function(require,module,exports){
+var SubMenu = require("./SubMenu.js");
+var util = require("../../util");
+var behaviourModel = require("../../model").behaviourModel;
+var projectModel = require("../../model").projectModel;
+var service = require("../../service");
+
+function RotationMenu() {
+	SubMenu.call(this);
+	util.bind(this);
+
+	this.ui = {
+		rows: [
+			this.checkbox("Enabled: ", {id: "rotation_enable", value: 0}),
+			this.rangedSlider("rotation", "Rotation/sec: "),
+			this.rangedSlider("variance", "Variance: ")
+		]
+	};
+}
+
+util.inherit(RotationMenu, SubMenu);
+
+RotationMenu.prototype.rangedSlider = function(id, label) {
+	var slider = this.slider(label, {
+		id: id,
+		labelWidth: 30,
+		min: -360,
+		max: 360,
+		step: 0.01,
+		value: 0
+	});
+
+	return slider;
+};
+
+RotationMenu.prototype.onMenuCreated = function() {
+	this.bind("rotation", "rotationInDegrees", this.getBehaviour);
+	this.bind("variance", "varianceInDegrees", this.getBehaviour);
+
+	$$("rotation_enable").attachEvent("onChange", this.onEnableChanged);
+	service.msg.on("emitter/changed", this.onEmitterChanged);
+};
+
+RotationMenu.prototype.onEnableChanged = function(value) {
+	service.msg.emit("behaviour/setEnable", value, this.getBehaviour());
+};
+
+RotationMenu.prototype.onEmitterChanged = function() {
+	$$("rotation_enable").setValue(projectModel.hasActiveBehaviour(this.getBehaviour()));
+};
+
+RotationMenu.prototype.getBehaviour = function() {
+	return behaviourModel.getBehaviourByName(jupiter.BehaviourNames.ROTATION_BEHAVIOUR);
+};
+
+module.exports = RotationMenu;
+
+
+
+},{"../../model":17,"../../service":19,"../../util":21,"./SubMenu.js":43}],41:[function(require,module,exports){
 var SubMenu = require("./SubMenu.js");
 var util = require("../../util");
 var behaviourModel = require("../../model").behaviourModel;
@@ -2017,7 +2079,7 @@ module.exports = SizeMenu;
 
 
 
-},{"../../model":17,"../../service":19,"../../util":21,"./SubMenu.js":42}],41:[function(require,module,exports){
+},{"../../model":17,"../../service":19,"../../util":21,"./SubMenu.js":43}],42:[function(require,module,exports){
 var SubMenu = require("./SubMenu.js");
 var util = require("../../util");
 var service = require("../../service");
@@ -2077,7 +2139,7 @@ StandardEmissionMenu.prototype.getController = function() {
 };
 
 module.exports = StandardEmissionMenu;
-},{"../../model":17,"../../service":19,"../../util":21,"./SubMenu.js":42}],42:[function(require,module,exports){
+},{"../../model":17,"../../service":19,"../../util":21,"./SubMenu.js":43}],43:[function(require,module,exports){
 var extension = require("../extension");
 var service = require("../../service");
 
@@ -2156,7 +2218,7 @@ SubMenu.prototype._setup = function(defaultStyle, extraStyle) {
 };
 
 module.exports = SubMenu;
-},{"../../service":19,"../extension":26}],43:[function(require,module,exports){
+},{"../../service":19,"../extension":26}],44:[function(require,module,exports){
 var SubMenu = require("./SubMenu.js");
 var util = require("../../util");
 var service = require("../../service");
@@ -2267,12 +2329,12 @@ function imageTemplate(obj) {
 
 
 
-},{"../../controller":8,"../../model":17,"../../service":19,"../../util":21,"./SubMenu.js":42}],44:[function(require,module,exports){
+},{"../../controller":8,"../../model":17,"../../service":19,"../../util":21,"./SubMenu.js":43}],45:[function(require,module,exports){
 module.exports = {
 	Menu: require("./Menu.js"),
 	ProjectMenu: require("./ProjectMenu.js")
 };
-},{"./Menu.js":36,"./ProjectMenu.js":38}],45:[function(require,module,exports){
+},{"./Menu.js":36,"./ProjectMenu.js":38}],46:[function(require,module,exports){
 var util = require("../../util");
 var service = require("../../service");
 var StageBackground = require("./StageBackground.js");
@@ -2317,7 +2379,7 @@ Stage.prototype.onMarkerPositionChanged = function() {
 };
 
 module.exports = Stage;
-},{"../../model":17,"../../service":19,"../../util":21,"../Marker.js":24,"./StageBackground.js":46}],46:[function(require,module,exports){
+},{"../../model":17,"../../service":19,"../../util":21,"../Marker.js":24,"./StageBackground.js":47}],47:[function(require,module,exports){
 var util = require("../../util");
 var service = require("../../service");
 var backgroundModel = require("../../model").backgroundModel;
