@@ -32,7 +32,8 @@ SizeMenu.prototype.positionSlider = function(id, label) {
 		labelWidth: 30,
 		min: 0,
 		max: 10,
-		value: 1
+		value: 1,
+		step: 0.1
 	});
 
 	return slider;
@@ -44,7 +45,8 @@ SizeMenu.prototype.varianceSlider = function(id, label) {
 		labelWidth: 30,
 		min: 0,
 		max: 10,
-		value: 0
+		value: 0,
+		step: 0.1
 	});
 
 	return slider;
