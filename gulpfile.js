@@ -14,6 +14,10 @@ var watch = require('gulp-watch');
 var jshint = require('gulp-jshint');
 var runSequence = require('run-sequence');
 var connect = require('gulp-connect');
+var fs = require('fs');
+var path = require('path');
+var headerText = fs.readFileSync(path.join(__dirname, 'header.txt'), 'utf8');
+var licenseText = fs.readFileSync(path.join(__dirname, 'LICENSE'), 'utf8');
 
 var options = minimist(process.argv.slice(2));
 var buildConfig = require("./build/config.json");
@@ -39,6 +43,11 @@ gulp.task("browserify:designer", ["jshint"], function() {
 		.pipe(source("./src/index.js"))
 		.pipe(rename("jupiter_designer.js"))
 		.pipe(buffer())
+		.pipe(header(headerText, {
+				licenseText: licenseText,
+				date: new Date().toISOString()
+			}
+		))
 		.pipe(sourcemaps.init({loadMaps: true})).on("error", gutil.log)
 		.pipe(sourcemaps.write("./"))
 		.pipe(gulp.dest("./bin"))
